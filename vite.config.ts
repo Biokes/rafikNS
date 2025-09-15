@@ -12,4 +12,3 @@ export default defineConfig({
     },
   },
 });
-pnpm dlx shadcn@latest init
