@@ -11,7 +11,8 @@ import { Card } from "../ui/card"
 
 export default function HeroSection() {
   const [isLoading, setLoading] = useState(false)
-
+  const [isValidInput, setValidInput] = useState<string>("")
+  const [isValidName, setValidName] = useState<boolean>(false)
   function search() {
     setLoading(true)
     setTimeout(() => {
@@ -21,6 +22,7 @@ export default function HeroSection() {
 
   function getName() {
     toast.error("Connect wallet first")
+    setValidName(false)
   }
 
   return (
@@ -36,13 +38,16 @@ export default function HeroSection() {
         disableRotation={false}
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-8 -translate-y-8 md:-translate-y-16">
-        <h1 className="text-5xl md:text-8xl font-bold text-center leading-tight ">
+        <h1 className="text-3xl md:text-7xl font-bold text-center leading-tight ">
           Own Your <span className="text-highlight">Identity</span>
         </h1>
         <Popover>
           <div className="w-[80%] md:w-[700px] flex items-center gap-2 p-2 rounded-xl border border-highlight bg-white/10 backdrop-blur-md">
             <Input
               type="text"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setValidInput(e.target.value.trim())
+              }}
               placeholder="Search a name.rafik"
               className={cn(
                 "w-full px-4 py-3 rounded-lg text-white placeholder-gray-300 bg-transparent",
@@ -54,39 +59,39 @@ export default function HeroSection() {
                 size="icon"
                 variant="ghost"
                 onClick={search}
-                className="text-white hover:bg-white/20"
+                disabled={isValidInput.length<1}
+                className="text-white hover:bg-white/20 cursor-pointer"
               >
                 <Search className="w-5 h-5" />
               </Button>
             </PopoverTrigger>
           </div>
-
-          {/* Popover Result */}
           <PopoverContent className="w-80 p-4 backdrop-blur-md bg-white/10 border border-highlight text-white">
             <div className="flex flex-col items-center space-y-4">
-              <h4 className="font-medium">Checking name availability...</h4>
+              <h4 className="font-medium">{isLoading?"Checking name availability...": "Response"}</h4>
               {isLoading ? (
                 <div className="space-y-2 w-full">
                   <Skeleton className="h-12 w-full rounded-md border border-gray-200 shadow-lg" />
-                  <Skeleton className="h-12 w-full rounded-md border border-gray-200 shadow-lg" />
                 </div>
               ) : (
+                  isValidName?
                 <Button className="w-full" onClick={getName}>
                   Get Name
-                </Button>
+                    </Button>
+                    : <p className="text-white p-2 border-border text-sm bg-primary rounded">Name exists Please select another name</p>
               )}
             </div>
           </PopoverContent>
         </Popover>
          <div className="flex flex-col md:flex-row justify-center items-center gap-2 max-w-2xl mx-auto">
-          <Card className={cn("gap-4","text-center space-y-3 p-3 max-w-[200px]")}>
+          <Card className={cn("gap-1","text-center space-y-3 p-3 max-w-[200px]")}>
             <User className="h-5 w-8 text-primary mx-auto" />
-            <h3 className="font-semibold font-space-grotesk">Claim Your Identity</h3>
+            <h3 className="font-semibold ">Claim Your Identity</h3>
             <p className="text-[0.75rem] text-muted-foreground">
               Secure your unique name on the decentralized network
             </p>
           </Card>
-          <Card className={cn("gap-4","text-center space-y-3 p-3 max-w-[200px]")}>
+          <Card className={cn("gap-1","text-center space-y-3 p-3 max-w-[200px]")}>
             <MessageSquare className="h-5 w-8 text-primary mx-auto" />
             <h3 className="font-semibold ">Connect & Chat</h3>
             <p className="text-[0.75rem] text-muted-foreground">
