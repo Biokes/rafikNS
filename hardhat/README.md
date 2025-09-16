@@ -91,3 +91,7 @@ The project is configured for:
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
+
+## contract Details
+- Deployed Contract Address: 0xBB421d7674E509037Dad9021f2505146DEC041d0
+- Deployed chain: Lisk sepolia
