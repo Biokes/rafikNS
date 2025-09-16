@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Kings&family=Niconne&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+
+@custom-variant dark (&:is(.dark *));
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --radius: 0.65rem;
+
+  /* Base surfaces */
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+
+  /* Brand color (deep orange) */
+  --primary: #E76001;
+  --primary-foreground: #ffffff;
+
+  /* Secondary (lighter orange tint) */
+  --secondary: #FFD7BF;
+  --secondary-foreground: #2a2a2a;
+
+  /* Muted neutrals */
+  --muted: #f3f3f3;
+  --muted-foreground: #737373;
+
+  /* Accent (orange highlight variant) */
+  --accent: #FF8A33;
+  --accent-foreground: #ffffff;
+
+  /* Errors/destructive */
+  --destructive: #D64545;
+  --destructive-foreground: #ffffff;
+
+  /* Borders / inputs / ring */
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #E76001;
+
+  /* Charts (orange-centric palette) */
+  --chart-1: #E76001;
+  --chart-2: #FF8A33;
+  --chart-3: #FFB066;
+  --chart-4: #FFD7BF;
+  --chart-5: #732F00;
+
+  /* Sidebar */
+  --sidebar: #fff8f5;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #E76001;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #FF8A33;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #E76001;
+}
+
+.dark {
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+  --card: #2a2a2a;
+  --card-foreground: #ffffff;
+  --popover: #2a2a2a;
+  --popover-foreground: #ffffff;
+
+  --primary: #E76001;
+  --primary-foreground: #ffffff;
+
+  --secondary: #4a2d20;
+  --secondary-foreground: #ffffff;
+
+  --muted: #333333;
+  --muted-foreground: #a1a1a1;
+
+  --accent: #FF8A33;
+  --accent-foreground: #ffffff;
+
+  --destructive: #D64545;
+  --destructive-foreground: #ffffff;
+
+  --border: #333333;
+  --input: #404040;
+  --ring: #E76001;
+
+  --chart-1: #E76001;
+  --chart-2: #FF8A33;
+  --chart-3: #FFB066;
+  --chart-4: #FFD7BF;
+  --chart-5: #732F00;
+
+  --sidebar: #1f1f1f;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #E76001;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #FF8A33;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #333333;
+  --sidebar-ring: #E76001;
+}
+
+
+
+  body {
+    @apply bg-background text-foreground;
+    font-weight: 400;
+    font-style: normal;
+  }
+button:hover {
+  @apply transform transition-all duration-400 scale-[1.07] ease-in-out;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+.name{
+      font-family: "Kings";
+}
