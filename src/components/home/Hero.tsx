@@ -3,7 +3,7 @@ import Particles from "./partiles"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "../ui/skeleton"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -54,7 +54,6 @@ export default function HeroSection() {
         functionName: "isAvailableName",
         args: [userInput.toLowerCase()]
       })
-      console.log("isAvailableName: ", isAvailableName)
       setValidName(Boolean(isAvailableName))
     }
     catch (error) {
@@ -65,26 +64,33 @@ export default function HeroSection() {
     }
   }
 
-
+  const isRegistered = useCallback(async () => {
+    try {
+      const isRegistered = await publicClient?.readContract({
+        abi: CONTRACT_ABI,
+        address: CONTRACT_ADDRESS as Hex,
+        functionName: "isRegistered",
+        args: [address]
+      })
+      if (isRegistered) {
+        navigate("/chats")
+      }
+    } catch (error) {
+      console.error("error during search: ", error)
+    }
+  }, [address, navigate])
 
   useEffect(() => {
     if (isConnected && isDialogOpen) {
       setOpenDialog(true)
     }
   }, [isConnected, isDialogOpen])
-  // try {
-  //       console.log("open modal")
-  //       const hash = await writeContractAsync({
-  //         address: CONTRACT_ADDRESS as Hex,
-  //         abi: CONTRACT_ABI,
-  //         functionName: "createName",
-  //         args: [userInput.toLowerCase()]
-  //       })
-  //       const result = await publicClient.waitForTransactionReceipt({ hash: hash })
-  //       console.log("Result: ", result);
-  //     }catch (error) {
-  //       console.error("error during search: ", error)
-  //     }
+
+  useEffect(() => {
+    if (isConnected) {
+      isRegistered()
+    }
+  }, [isConnected, isRegistered])
   const getName = async () => {
     if (!address) {
       openConnectModal?.()
@@ -117,6 +123,7 @@ export default function HeroSection() {
       console.log("error: ", error)
     }
   }
+
   return (
     <div className="relative w-full h-[620px] overflow-hidden">
       <Particles

@@ -1,6 +1,7 @@
 import Particles from "../home/partiles";
+import Chat from "./Chat";
 
-export default function Chat() {
+export default function ChatPage() {
     return (
         <div className="relative w-full h-[620px] overflow-hidden">
             <Particles
@@ -13,8 +14,8 @@ export default function Chat() {
                 alphaParticles={false}
                 disableRotation={false}
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-8 -translate-y-8 md:-translate-y-16">
-                <p>chats</p>
+            <div className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-8 ">
+                <Chat/>
             </div>
         </div>
     )
