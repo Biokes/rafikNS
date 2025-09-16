@@ -1,0 +1,19 @@
+type CreatedName @entity(immutable: true) {
+  id: Bytes!
+  username: String! # string
+  userAddress: Bytes! # address
+  imageURL: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Messaging @entity(immutable: true) {
+  id: Bytes!
+  sender: String! # string
+  reciever: String! # string
+  messageContent: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

@@ -1,0 +1,29 @@
+specVersion: 1.3.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: RafikNS
+    network: sepolia
+    source:
+      address: "0xb641aaAA356aF78614E0Bb65f0C3920cE7C68988"
+      abi: RafikNS
+      startBlock: 9216537
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - CreatedName
+        - Messaging
+      abis:
+        - name: RafikNS
+          file: ./abis/RafikNS.json
+      eventHandlers:
+        - event: CreatedName(string,address,string)
+          handler: handleCreatedName
+        - event: Messaging(string,string,string)
+          handler: handleMessaging
+      file: ./src/rafik-ns.ts
