@@ -18,6 +18,8 @@ dataSources:
       entities:
         - CreatedName
         - Messaging
+        - RafikNS
+        - Transaction
       abis:
         - name: RafikNS
           file: ./abis/RafikNS.json
