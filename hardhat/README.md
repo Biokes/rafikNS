@@ -1,57 +1,93 @@
-# Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
+# RafikNS - Blockchain Name Service and Messaging System
 
-This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
+## Overview
+RafikNS is a decentralized name service and messaging system built on the Lisk blockchain. It allows users to register unique usernames, associate them with their Ethereum addresses, and send messages to other registered users on the RafikNS network.
 
-To learn more about the Hardhat 3 Beta, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3 Beta](https://hardhat.org/hardhat3-beta-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+## Features
+- Username registration with avatar/image support
+- Username availability checking
+- Decentralized messaging system
+- Message inbox retrieval
 
-## Project Overview
+## Project Structure
+```
+hardhat/
+├── contracts/          # Smart contract source files
+├── test/              # Test files
+├── scripts/           # Deployment and verification scripts
+├── ignition/          # Deployment modules and configurations
+└── types/             # TypeScript type definitions
+```
 
-This example project includes:
+## Smart Contract
+The main contract `RafikNS.sol` implements:
+- Username registration and management
+- Message storage and retrieval
+- Events for username creation and messaging
 
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
+### Key Functions
+- `isAvailableName(string name)`: Check if a username is available
+- `createName(string name, string image)`: Register a new username with an avatar
+- `message(string sender, string receiver, string content)`: Send a message
+- `getInbox(string name)`: Retrieve messages for a username
 
-## Usage
+## Development Setup
 
-### Running Tests
+### Prerequisites
+- Node.js (v16 or higher)
+- pnpm/npm/yarn
+- A Lisk Sepolia RPC URL
+- An Etherscan API key for verification
 
-To run all the tests in the project, execute the following command:
+### Installation
+1. Install dependencies:
+```bash
+pnpm install
+```
 
-```shell
+2. Put in hardhat local Keystore file the following variables:
+```
+PRIVATE_KEY=your_private_key
+LISK_SEPOLIA_URL=your_rpc_url
+ETHERSCAN_API_KEY=your_api_key
+```
+
+### Testing
+Run the test suite:
+```bash
 npx hardhat test
 ```
 
-You can also selectively run the Solidity or `mocha` tests:
-
-```shell
-npx hardhat test solidity
-npx hardhat test mocha
+### Deployment
+Deploy to Lisk Sepolia network:
+```bash
+npx hardhat run scripts/verification.ts --network liskSepolia
 ```
 
-### Make a deployment to Sepolia
-
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
-
-To run the deployment to a local chain:
-
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
+### Contract Verification
+Verify the deployed contract:
+```bash
+npx hardhat verify --network liskSepolia <CONTRACT_ADDRESS>
 ```
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
+## Network Configuration
+The project is configured for:
+- Lisk Sepolia Testnet (Chain ID: 4202)
+- Local Hardhat network for testing
 
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
+## Solidity Configuration
+- Solidity version: 0.8.28
+- Optimizer enabled for production builds
 
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
+## Development Tools
+- Hardhat for development environment
+- Hardhat Verify for contract verification
+- Hardhat Keystore for secure key management
+- Hardhat Toolbox with Mocha and Ethers.js integration
 
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
-```
-
-After setting the variable, you can run the deployment with the Sepolia network:
-
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
-```
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
