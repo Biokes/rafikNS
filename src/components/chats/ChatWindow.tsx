@@ -54,8 +54,8 @@ const mockMessages: Message[] = [
 
 const mockUser = {
   id: "1",
-  name: "Sarah Johnson",
-  avatar: "https://images.unsplash.com/photo-1494790108755-2616c4d41f1e?w=100&h=100&fit=crop&crop=face",
+  name: "All users",
+  avatar: "",
   status: "online",
 };
 

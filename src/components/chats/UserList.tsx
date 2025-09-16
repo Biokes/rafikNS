@@ -21,40 +21,9 @@ interface UserListProps {
 
 const mockUsers: User[] = [
   {
-    id: "1",
-    name: "Sarah Johnson",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616c4d41f1e?w=100&h=100&fit=crop&crop=face",
-    status: "online",
-    lastMessage: "Hey! How are you doing?",
-    lastMessageTime: "2:30 PM",
-    unreadCount: 2,
-  },
-  {
-    id: "2",
-    name: "Mike Chen",
-    status: "online",
-    lastMessage: "Thanks for the help earlier",
-    lastMessageTime: "1:45 PM",
-  },
-  {
-    id: "3",
-    name: "Emily Davis",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-    status: "away",
-    lastMessage: "Let's catch up tomorrow",
-    lastMessageTime: "12:20 PM",
-  },
-  {
-    id: "4",
-    name: "Alex Rodriguez",
-    status: "offline",
-    lastMessage: "Perfect! See you there",
-    lastMessageTime: "Yesterday",
-  },
-  {
     id: "5",
     name: "Jessica Williams",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+    avatar: "",
     status: "online",
     lastMessage: "The project looks great!",
     lastMessageTime: "Yesterday",
@@ -88,7 +57,6 @@ export default function UserList({
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
-      {/* Header */}
       <div className="p-4 border-b border-chat-border">
         <h2 className="text-lg font-semibold text-chat-text mb-3">Chats</h2>
         <div className="relative">
@@ -101,8 +69,6 @@ export default function UserList({
           />
         </div>
       </div>
-
-      {/* User List */}
       <div className="flex-1 overflow-y-auto">
         {filteredUsers.map((user) => (
           <div

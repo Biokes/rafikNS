@@ -117,7 +117,7 @@ export default function HeroSection() {
       const response = await request.json();
       console.log(response.data.cid)
       setPreview("https://ipfs.io/ipfs/" + response.data.cid)
-      navigate("/chat")
+      navigate("/chats")
     } catch (error) {
       toast.error("unable to upload image")
       console.log("error: ", error)
