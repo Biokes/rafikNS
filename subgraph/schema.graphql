@@ -1,0 +1,34 @@
+type Transaction @entity(immutable: true) {
+  id: ID!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CreatedName @entity(immutable: true) {
+  id: ID!
+  username: String!
+  userAddress: Bytes!
+  imageURL: String!
+  transaction: Transaction!
+  protocol: RafikNS!
+  sentMessages: [Messaging!]! @derivedFrom(field: "senderUser")
+  receivedMessages: [Messaging!]! @derivedFrom(field: "receiverUser")
+}
+
+type Messaging @entity(immutable: true) {
+  id: Bytes!
+  sender: String!
+  reciever: String!
+  messageContent: String!
+  transaction: Transaction!
+  protocol: RafikNS!
+  senderUser: CreatedName!
+  receiverUser: CreatedName!
+}
+
+type RafikNS @entity(immutable:false){
+  id: ID!
+  users: [CreatedName!]! @derivedFrom(field: "protocol")
+  messages: [Messaging!]! @derivedFrom(field: "protocol")
+}
