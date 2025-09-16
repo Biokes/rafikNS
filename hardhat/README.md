@@ -93,5 +93,7 @@ The project is configured for:
 5. Create a Pull Request
 
 ## contract Details
-- Deployed Contract Address: 0xBB421d7674E509037Dad9021f2505146DEC041d0
-- Deployed chain: Lisk sepolia
+- Deployed Contract Address: 0xBB421d7674E509037Dad9021f2505146DEC041d0 (Lisk-sepolia), 0xb641aaAA356aF78614E0Bb65f0C3920cE7C68988 (sepolia)
+- Deployed chain: Lisk sepolia, sepolia 
+
+[Click here to view on explorer](https://sepolia.etherscan.io/address/0xb641aaAA356aF78614E0Bb65f0C3920cE7C68988#code)
