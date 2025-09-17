@@ -1,8 +1,8 @@
 {
   "sepolia": {
     "RafikNS": {
-      "address": "0xb641aaAA356aF78614E0Bb65f0C3920cE7C68988",
-      "startBlock": 9216537
+      "address": "0x305F599fbCd667dbb9ca28960751430A1e8Fc3Ad",
+      "startBlock": 9223636
     }
   }
 }
