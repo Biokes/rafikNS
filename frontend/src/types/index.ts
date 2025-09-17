@@ -1,6 +1,7 @@
 export type BaseUser = {
   username: string;
-  address: string;
+  userAddress: string;
+  imageURL: string;
 };
 export type UserProfiles = {
   createdNames: BaseUser[];

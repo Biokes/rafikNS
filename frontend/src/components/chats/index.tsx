@@ -14,7 +14,7 @@ export default function ChatPage() {
                 alphaParticles={false}
                 disableRotation={false}
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-8 ">
+            <div className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-8 border-[1px]">
                 <Chat/>
             </div>
         </div>

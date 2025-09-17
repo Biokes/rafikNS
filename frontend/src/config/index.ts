@@ -158,7 +158,7 @@ export const CONTRACT_ABI = [
       "type": "function"
     }
   ] as Abi;
-export const CONTRACT_ADDRESS: string = "0xeb030b13cB6BEaB3D80a5367101911Ef9E173914"
+export const CONTRACT_ADDRESS: string = "0xb641aaAA356aF78614E0Bb65f0C3920cE7C68988"
 export const publicClient = createPublicClient({
   chain: sepolia,
   transport: http()

@@ -9,10 +9,10 @@ import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { Card } from "../ui/card"
 import { CONTRACT_ABI, CONTRACT_ADDRESS, JWT } from "@/config"
-import type { Hex } from "viem"
+// import type { Hex } from "viem"
 import { useAccount } from "wagmi"
 import { useConnectModal } from "@rainbow-me/rainbowkit"
-import { useWriteContract } from "wagmi"
+// import { useWriteContract } from "wagmi"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog"
 import { useNavigate } from "react-router-dom";
 import { gql, request } from "graphql-request"
@@ -28,7 +28,7 @@ export default function HeroSection() {
   const navigate = useNavigate()
   const { address, isConnected } = useAccount()
   const { openConnectModal } = useConnectModal()
-  const { writeContractAsync } = useWriteContract()
+  // const { writeContractAsync } = useWriteContract()
   const [users, setUsers] = useState<UserProfiles>({ createdNames: [] })
   const document = gql`{
             createdNames(first: 100) {
@@ -41,7 +41,8 @@ export default function HeroSection() {
     try {
       const usersResponse: UserProfiles = await request('https://api.studio.thegraph.com/query/120726/rafik-ns/0.0.1', document)
       setUsers(usersResponse)
-      const isExisting = usersResponse.createdNames.some((user) => { return user.address.toLowerCase() === address?.toLowerCase() })
+      console.log("user response: ", usersResponse.createdNames)
+      const isExisting = usersResponse.createdNames.some((user) => { return user.userAddress.toLowerCase() === address?.toLowerCase() })
       if (isExisting) {
         navigate("/chats");
       }
@@ -79,24 +80,8 @@ export default function HeroSection() {
     }
   }
 
-  const search = async () => {
-    setLoading(true)
-    try {
+  const search = () => {
       setValidName(users.createdNames.some((user) => { return user.username.toLowerCase() === userInput.toLowerCase() }))
-      // const isAvailableName = await publicClient?.readContract({
-      //   abi: CONTRACT_ABI,
-      //   address: CONTRACT_ADDRESS as Hex,
-      //   functionName: "isAvailableName",
-      //   args: [userInput.toLowerCase()]
-      // })
-      // setValidName(Boolean(isAvailableName))
-    }
-    catch (error) {
-      console.error("error during search: ", error)
-    }
-    finally {
-      setLoading(false)
-    }
   }
 
 
@@ -126,7 +111,6 @@ export default function HeroSection() {
       const response = await request.json();
       console.log(response.data.cid)
       setPreview("https://ipfs.io/ipfs/" + response.data.cid)
-      navigate("/chats")
     } catch (error) {
       toast.error("unable to upload image")
       console.log("error: ", error)
@@ -257,16 +241,16 @@ export default function HeroSection() {
                 if (selectedFile) {
                   handleUploadFile(selectedFile)
                 }
-                const hash = await writeContractAsync({
-                  address: CONTRACT_ADDRESS as Hex,
-                  abi: CONTRACT_ABI,
-                  functionName: "createName",
-                  args: [userInput.toLowerCase()],
-                })
-                console.log("Tx hash: ", hash)
+                console.log("Image preview url: ",preview)
+                // await writeContractAsync({
+                //   address: CONTRACT_ADDRESS as Hex,
+                //   abi: CONTRACT_ABI,
+                //   functionName: "createName",
+                //   args: [userInput.toLowerCase(),preview as string],
+                // })
                 toast.success("Name registered successfully!")
-                setOpenDialog(false)
-                navigate("/chats")
+                // setOpenDialog(false)
+                // navigate("/chats")
               } catch (err) {
                 console.error(err)
                 toast.error("Transaction failed")
