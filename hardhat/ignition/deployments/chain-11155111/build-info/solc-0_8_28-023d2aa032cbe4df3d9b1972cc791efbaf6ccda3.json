@@ -1,0 +1,40 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-023d2aa032cbe4df3d9b1972cc791efbaf6ccda3",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/RafikNS.sol": "project/contracts/RafikNS.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": [],
+      "viaIR": true
+    },
+    "sources": {
+      "project/contracts/RafikNS.sol": {
+        "content": "// SPDX-License-Identifier: GPL-3.0\n\npragma solidity ^0.8.28;\n\ncontract RafikNS{\n    struct User{\n        address userAddress;\n        string imageURL;\n    }\n\n    struct Message{\n        uint id;\n        string sender;\n        string reciever;\n        string content;\n    }\n\n    User[] private users;\n    mapping (string => User) private usernames;\n    mapping (string => Message[]) private inbox;\n    uint public counter =  0;\n\n    \n    function isAvailableName(string memory name) external view returns(bool){\n        return usernames[name].userAddress == address(0);\n    }\n\n    function createName(string memory name,string memory image) external{\n        require(usernames[name].userAddress == address(0),\"Name already taken\");\n        usernames[name].userAddress = msg.sender;\n        usernames[name].imageURL = image;\n        emit CreatedName(name, msg.sender, image);\n    }\n\n   function message(string memory sender,string memory messageReciever, string memory content) external {\n        counter+=1;\n        inbox[sender].push(Message({id:counter, reciever: messageReciever, content: content, sender: sender}));\n        emit Messaging(sender,messageReciever,content);\n    }\n\n    function getInbox(string memory name) external view returns (Message[] memory) {\n        return inbox[name];\n    }\n    event CreatedName(string username, address userAddress, string imageURL);\n    event Messaging(string sender, string reciever, string messageContent);\n}\n"
+      }
+    }
+  }
+}
