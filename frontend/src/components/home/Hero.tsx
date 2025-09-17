@@ -8,14 +8,15 @@ import { Button } from "../ui/button"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { Card } from "../ui/card"
-import { CONTRACT_ABI, CONTRACT_ADDRESS, JWT, publicClient } from "@/config"
+import { CONTRACT_ABI, CONTRACT_ADDRESS, JWT } from "@/config"
 import type { Hex } from "viem"
 import { useAccount } from "wagmi"
 import { useConnectModal } from "@rainbow-me/rainbowkit"
 import { useWriteContract } from "wagmi"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog"
 import { useNavigate } from "react-router-dom";
-
+import { gql, request } from "graphql-request"
+import type { UserProfiles } from "@/types"
 
 export default function HeroSection() {
   const [isLoading, setLoading] = useState(false)
@@ -28,6 +29,39 @@ export default function HeroSection() {
   const { address, isConnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { writeContractAsync } = useWriteContract()
+  const [users, setUsers] = useState<UserProfiles>({ createdNames: [] })
+  const document = gql`{
+            createdNames(first: 100) {
+                username
+                userAddress
+                }
+        }`
+
+  async function checkUser() {
+    try {
+      const usersResponse: UserProfiles = await request('https://api.studio.thegraph.com/query/120726/rafik-ns/0.0.1', document)
+      setUsers(usersResponse)
+      const isExisting = usersResponse.createdNames.some((user) => { return user.address.toLowerCase() === address?.toLowerCase() })
+      if (isExisting) {
+        navigate("/chats");
+      }
+    } catch (error) {
+      console.log("graphql error: ", error)
+    }
+  }
+
+  useEffect(() => {
+    if (isConnected && address) {
+      checkUser();
+    }
+  }, [isConnected, address]);
+
+  useEffect(() => {
+    if (isConnected && isDialogOpen) {
+      setOpenDialog(true)
+    }
+  }, [isConnected, isDialogOpen])
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null
@@ -48,13 +82,14 @@ export default function HeroSection() {
   const search = async () => {
     setLoading(true)
     try {
-      const isAvailableName = await publicClient?.readContract({
-        abi: CONTRACT_ABI,
-        address: CONTRACT_ADDRESS as Hex,
-        functionName: "isAvailableName",
-        args: [userInput.toLowerCase()]
-      })
-      setValidName(Boolean(isAvailableName))
+      setValidName(users.createdNames.some((user) => { return user.username.toLowerCase() === userInput.toLowerCase() }))
+      // const isAvailableName = await publicClient?.readContract({
+      //   abi: CONTRACT_ABI,
+      //   address: CONTRACT_ADDRESS as Hex,
+      //   functionName: "isAvailableName",
+      //   args: [userInput.toLowerCase()]
+      // })
+      // setValidName(Boolean(isAvailableName))
     }
     catch (error) {
       console.error("error during search: ", error)
@@ -64,13 +99,6 @@ export default function HeroSection() {
     }
   }
 
-
-
-  useEffect(() => {
-    if (isConnected && isDialogOpen) {
-      setOpenDialog(true)
-    }
-  }, [isConnected, isDialogOpen])
 
   const getName = async () => {
     if (!address) {
@@ -110,7 +138,7 @@ export default function HeroSection() {
       <Particles
         particleColors={["#ffffff", "#ffa500"]}
         particleCount={500}
-        particleSpread={6}
+        particleSpread={2}
         speed={0.5}
         particleBaseSize={100}
         moveParticlesOnHover
@@ -125,9 +153,10 @@ export default function HeroSection() {
           <div className="w-[80%] md:w-[700px] flex items-center gap-2 p-2 rounded-xl border border-highlight bg-white/10 backdrop-blur-md">
             <Input
               type="text"
+              value={userInput}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 let value = e.target.value.toLowerCase()
-                value = value.replace(/[^a-z0-9-]/g, "")
+                value = value.replace(/[^a-z0-9-_]/g, "")
                 value = value.replace(/^-+|-+$/g, "")
                 setUserInput(value)
               }}
@@ -146,7 +175,7 @@ export default function HeroSection() {
           </div>
           <PopoverContent className="w-80 p-4 backdrop-blur-md bg-white/10 border border-highlight text-white">
             <div className="flex flex-col items-center space-y-4">
-              <h4 className="font-medium">{isLoading ? "Checking name availability..." : !isValidName ? "Lucky you" : "Ooops"}</h4>
+              <h4 className="font-medium">{isLoading ? "Checking name availability..." : !isValidName ? "Lucky you 🎉🎉🎉" : "Ooops 😔😔🥲"}</h4>
               {isLoading ? (
                 <div className="space-y-2 w-full">
                   <Skeleton className="h-12 w-full rounded-md border border-gray-200 shadow-lg" />
@@ -181,34 +210,43 @@ export default function HeroSection() {
           </Card>
         </div>
       </div>
-      <Dialog open={isDialogOpen} onOpenChange={setOpenDialog}>
+      <Dialog open={isDialogOpen} onOpenChange={() => {
+        setPreview(null)
+        setSelectedFile(null)
+        setOpenDialog(false)
+      }}>
         <DialogContent className="bg-white text-black rounded-xl">
           <DialogHeader>
             <DialogTitle>Create Profile</DialogTitle>
-            <DialogDescription>
-              You are about to claim: <strong>{userInput}.rafik</strong>
+            <DialogDescription className="text-gray-800 py-3">
+              You are about to claim: <strong className="text-orange-500 capitalize text-[1.2rem]"> <br />{userInput}.rafik</strong>
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <label className="block text-sm font-medium">Upload Your Avatar</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="block w-full text-sm text-gray-500 border-[1px] w-[100px] h-8 flex justify-center pt-1 pl-5"
-            />
-            {preview && (
-              <div className="flex flex-col items-center gap-2 mt-2">
+          <div className="flex flex-col justify-center items-center gap-4 w-full">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-400">
+              Upload Your Avatar
+            </label>
+
+            <label className={`relative cursor-pointer flex items-center justify-center border-2 border-dashed border-gray-400 dark:border-gray-600 bg-gray-100 rounded-md h-32 w-full hover:border-blue-500 transition-colors`}>
+              {preview ? (
                 <img
                   src={preview}
                   alt="Selected"
-                  className="w-48 h-24 object-cover rounded-md border"
+                  className="h-full w-full object-cover rounded-md"
                 />
-                <p className="text-sm ">Selected file: {selectedFile?.name.substring(0, 10)}........jpg</p>
-              </div>
-            )}
+              ) : (
+                <span className="text-sm text-gray-400 dark:text-gray-400">Click to add image</span>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+            </label>
           </div>
+
 
           <Button
             className="w-full mt-4"
