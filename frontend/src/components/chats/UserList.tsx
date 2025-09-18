@@ -34,7 +34,8 @@ export default function UserList({
   const [searchQuery, setSearchQuery] = useState("");
   const [protocol, setProtocol] = useState<RafikNS>({rafikNS: {users:[]}})
     const document = gql`{
-      rafikNS(id: "protocol") {
+      rafikNS(id: "protocol", where: {contractAddress: "0x305F599fbCd667dbb9ca28960751430A1e8Fc3Ad" }) {
+
         users(first: 1000, orderBy: username) {
           imageURL
           sentMessages(first: 1000, orderBy: id) {
@@ -46,7 +47,7 @@ export default function UserList({
               blockNumber
               blockTimestamp
               id
-              transactionHash
+              transactionHash 
             }
           }
           receivedMessages(first: 1000, orderBy: id) {
@@ -69,9 +70,8 @@ export default function UserList({
   
   const fetchProtocolUsers = async () => {
     try {
-      const response:RafikNS = await request('https://api.studio.thegraph.com/query/120726/rafik-ns/0.0.1', document)
+      const response:RafikNS = await request('https://api.studio.thegraph.com/query/120726/rafik-ns/0.0.3', document)
       setProtocol(response)
-      console.log("fetched users: ", response)
     } catch (error) { 
       console.error("Fetching error: ",error)
     }
@@ -80,31 +80,10 @@ export default function UserList({
   useEffect(() => { 
     fetchProtocolUsers()
   },[])
-  // {
-  //   id: "5",
-  //   name: "Jessica Williams",
-  //   avatar: "",
-  //   status: "online",
-  //   lastMessage: "The project looks great!",
-  //   lastMessageTime: "Yesterday",
-  //   unreadCount: 1,
-  // },
+
   const filteredUsers = protocol.rafikNS.users.filter((user) =>
     user.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  // const getStatusColor = (status: User["status"]) => {
-  //   switch (status) {
-  //     case "online":
-  //       return "bg-green-500";
-  //     case "away":
-  //       return "bg-yellow-500";
-  //     case "offline":
-  //       return "bg-gray-400";
-  //     default:
-  //       return "bg-gray-400";
-  //   }
-  // };
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
@@ -153,26 +132,26 @@ export default function UserList({
                 <h3 className="font-medium text-chat-text truncate">
                   {user.username}
                 </h3>
-                {user.sentMessage.length>0 && (
-                  <span className="text-xs text-chat-text-muted">
-                    user.sentMessage
-                  </span>
-                )}
+                {/*{user.sentMessage.length>0 && (*/}
+                {/*  <span className="text-xs text-chat-text-muted">*/}
+                {/*    user.sentMessage*/}
+                {/*  </span>*/}
+                {/*)}*/}
               </div>
               <div className="flex items-center justify-between">
-                {user.sentMessage.length>0 && (
-                  <p className="text-sm text-chat-text-muted truncate">
-                    user.sentMessage
-                  </p>
-                )}
-                {user.sentMessage && (
-                  <Badge
-                    variant="default"
-                    className="bg-primary text-primary-foreground text-xs h-5 min-w-5 rounded-full px-1.5"
-                  >
-                    0
-                  </Badge>
-                )}
+                {/*{user.sentMessage.length>0 && (*/}
+                {/*  <p className="text-sm text-chat-text-muted truncate">*/}
+                {/*    user.sentMessage*/}
+                {/*  </p>*/}
+                {/*)}*/}
+                {/*{user.sentMessage && (*/}
+                {/*  <Badge*/}
+                {/*    variant="default"*/}
+                {/*    className="bg-primary text-primary-foreground text-xs h-5 min-w-5 rounded-full px-1.5"*/}
+                {/*  >*/}
+                {/*    0*/}
+                {/*  </Badge>*/}
+                {/*)}*/}
               </div>
             </div>
           </div>
