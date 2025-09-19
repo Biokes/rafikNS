@@ -34,10 +34,15 @@ type Messaging @entity(immutable: true) {
   transaction: Transaction!
   protocol: Protocol!
 }
-
-type Protocol @entity(immtuable: false ){
-  id: String!
-  users: [Users!]! @derivedFrom (field : "protocol") 
+type User @entity(immutable:true){
+  id: Bytes!
+  protocol: Protocol!
+  username: String!
+  userAddress: String!
+}
+type Protocol @entity(immutable: false ){
+  id: Bytes!
+  users: [User!]! @derivedFrom (field : "protocol") 
   messages: [Messaging!]! @derivedFrom (field : "protocol") 
   ethToUsdtPrice: BigInt!
   btcToUsdtPrice: BigInt!

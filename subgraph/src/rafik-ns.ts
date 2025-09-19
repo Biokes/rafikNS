@@ -10,7 +10,29 @@ import {
   EthUSDTPrice,
   Messaging
 } from "../generated/schema"
+// function getOrCreateTransaction(event: ethereum.Event): Transaction {
+//   let txId = event.transaction.hash.toHexString()
+//   let tx = Transaction.load(txId)
+//   if (tx == null) {
+//     tx = new Transaction(txId)
+//     tx.blockNumber = event.block.number
+//     tx.blockTimestamp = event.block.timestamp
+//     tx.transactionHash = event.transaction.hash
+//     tx.save()
+//   }
+//   return tx
+// }
 
+// function getOrCreateProtocol(): RafikNS {
+//   let protoId = "protocol"
+//   let proto = RafikNS.load(protoId)
+//   if (proto == null) {
+//     proto = new RafikNS(protoId)
+//     proto.contractAddress = Bytes.fromHexString("0x305F599fbCd667dbb9ca28960751430A1e8Fc3Ad")
+//     proto.save()
+//   }
+//   return proto
+// }
 export function handleBtcUSDTPrice(event: BtcUSDTPriceEvent): void {
   let entity = new BtcUSDTPrice(
     event.transaction.hash.concatI32(event.logIndex.toI32())
@@ -82,29 +104,7 @@ export function handleMessaging(event: MessagingEvent): void {
 //   Transaction,
 // } from "../generated/schema"
 
-// function getOrCreateTransaction(event: ethereum.Event): Transaction {
-//   let txId = event.transaction.hash.toHexString()
-//   let tx = Transaction.load(txId)
-//   if (tx == null) {
-//     tx = new Transaction(txId)
-//     tx.blockNumber = event.block.number
-//     tx.blockTimestamp = event.block.timestamp
-//     tx.transactionHash = event.transaction.hash
-//     tx.save()
-//   }
-//   return tx
-// }
 
-// function getOrCreateProtocol(): RafikNS {
-//   let protoId = "protocol"
-//   let proto = RafikNS.load(protoId)
-//   if (proto == null) {
-//     proto = new RafikNS(protoId)
-//     proto.contractAddress = Bytes.fromHexString("0x305F599fbCd667dbb9ca28960751430A1e8Fc3Ad")
-//     proto.save()
-//   }
-//   return proto
-// }
 
 // export function handleCreatedName(event: CreatedNameEvent): void {
 //   let tx = getOrCreateTransaction(event)
