@@ -20,6 +20,8 @@ dataSources:
         - CreatedName
         - EthUSDTPrice
         - Messaging
+        - User
+        - Protocol
       abis:
         - name: RafikNS
           file: ./abis/RafikNS.json

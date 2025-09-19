@@ -6,23 +6,23 @@ type Transaction @entity(immutable: true){
 }
 type BtcUSDTPrice @entity(immutable: true) {
   id: Bytes!
-  btcPrice: BigInt! # int256
-  time: BigInt! # uint256
+  btcPrice: BigInt!
+  time: BigInt!
   transaction: Transaction!
 }
 
 type CreatedName @entity(immutable: true) {
   id: Bytes!
-  username: String! # string
-  userAddress: Bytes! # address
-  imageURL: String! # string
+  username: String!
+  userAddress: Bytes! 
+  imageURL: String!
   transaction: Transaction!
 }
 
 type EthUSDTPrice @entity(immutable: true) {
   id: Bytes!
-  btcPrice: BigInt! # int256
-  time: BigInt! # uint256
+  btcPrice: BigInt!
+  time: BigInt!
   transaction: Transaction!
 }
 
@@ -34,10 +34,16 @@ type Messaging @entity(immutable: true) {
   transaction: Transaction!
   protocol: Protocol!
 }
-
-type Protocol @entity(immtuable: false ){
+type User @entity(immutable:true){
+  id: Bytes!
+  protocol: Protocol!
+  username: String!
+  userAddress: String!
+  imageURL: String!
+}
+type Protocol @entity(immutable: false ){
   id: String!
-  users: [Users!]! @derivedFrom (field : "protocol") 
+  users: [User!]! @derivedFrom (field : "protocol") 
   messages: [Messaging!]! @derivedFrom (field : "protocol") 
   ethToUsdtPrice: BigInt!
   btcToUsdtPrice: BigInt!

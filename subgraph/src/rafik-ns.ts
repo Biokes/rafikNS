@@ -1,155 +1,104 @@
+import {BigInt, ethereum, Bytes } from "@graphprotocol/graph-ts"
 import {
   BtcUSDTPrice as BtcUSDTPriceEvent,
   CreatedName as CreatedNameEvent,
   EthUSDTPrice as EthUSDTPriceEvent,
-  Messaging as MessagingEvent
+  Messaging as MessagingEvent,
 } from "../generated/RafikNS/RafikNS"
 import {
   BtcUSDTPrice,
   CreatedName,
   EthUSDTPrice,
-  Messaging
+  Messaging,
+  Transaction,
+  Protocol,
+  User,
 } from "../generated/schema"
 
-export function handleBtcUSDTPrice(event: BtcUSDTPriceEvent): void {
-  let entity = new BtcUSDTPrice(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.btcPrice = event.params.btcPrice
-  entity.time = event.params.time
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+function getOrCreateTransaction(event: ethereum.Event): Transaction {
+  let txId = event.transaction.hash.toHexString()
+  let tx = Transaction.load(Bytes.fromHexString(txId))
+  if (tx == null) {
+    tx = new Transaction(Bytes.fromHexString(txId))
+    tx.blockNumber = event.block.number
+    tx.blockTimestamp = event.block.timestamp
+    tx.transactionHash = event.transaction.hash
+    tx.save()
+  }
+  return tx
 }
 
-export function handleCreatedName(event: CreatedNameEvent): void {
-  let entity = new CreatedName(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.username = event.params.username
-  entity.userAddress = event.params.userAddress
-  entity.imageURL = event.params.imageURL
+function getOrCreateProtocol(): Protocol {
+  let protoId = "protocol"
+  let proto = Protocol.load(protoId)
+  if (proto == null) {
+    proto = new Protocol(protoId)
+    proto.ethToUsdtPrice = BigInt.fromI32(0)
+    proto.btcToUsdtPrice = BigInt.fromI32(0)
+    proto.save()
+  }
+  return proto
+}
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+export function handleBtcUSDTPrice(event: BtcUSDTPriceEvent): void {
+  let id = event.transaction.hash.toHexString()
+  let entity = new BtcUSDTPrice(Bytes.fromHexString(id))
+
+  entity.btcPrice = event.params.btcPrice
+  entity.time = event.params.time
+  entity.transaction = getOrCreateTransaction(event).id
+
+  let proto = getOrCreateProtocol()
+  proto.btcToUsdtPrice = event.params.btcPrice
+  proto.save()
 
   entity.save()
 }
 
 export function handleEthUSDTPrice(event: EthUSDTPriceEvent): void {
-  let entity = new EthUSDTPrice(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
+  let id = event.transaction.hash.toHexString()
+  let entity = new EthUSDTPrice(Bytes.fromHexString(id))
+
   entity.btcPrice = event.params.btcPrice
   entity.time = event.params.time
+  entity.transaction = getOrCreateTransaction(event).id
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let proto = getOrCreateProtocol()
+  proto.ethToUsdtPrice = event.params.btcPrice
+  proto.save()
 
   entity.save()
+}
+
+export function handleCreatedName(event: CreatedNameEvent): void {
+  let id = event.transaction.hash.toHexString()
+  let entity = new CreatedName(Bytes.fromHexString(id))
+
+  entity.username = event.params.username
+  entity.userAddress = event.params.userAddress
+  entity.imageURL = event.params.imageURL
+  entity.transaction = getOrCreateTransaction(event).id
+  entity.save()
+
+  let userId = event.params.userAddress.toHexString()
+  let user = User.load((Bytes.fromHexString(userId)))
+  if (user == null) {
+    user = new User((Bytes.fromHexString(userId)))
+    user.protocol = getOrCreateProtocol().id
+    user.username = event.params.username
+    user.userAddress = event.params.userAddress.toHexString()
+    user.imageURL = event.params.imageURL
+    user.save()
+  }
 }
 
 export function handleMessaging(event: MessagingEvent): void {
-  let entity = new Messaging(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
+  let id = event.transaction.hash.toHexString()
+  let entity = new Messaging((Bytes.fromHexString(id)))
   entity.sender = event.params.sender
   entity.reciever = event.params.reciever
   entity.messageContent = event.params.messageContent
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
+  entity.transaction = getOrCreateTransaction(event).id
+  entity.protocol = getOrCreateProtocol().id
   entity.save()
 }
-
-
-// import {
-//   CreatedName as CreatedNameEvent,
-//   Messaging as MessagingEvent,
-// } from "../generated/RafikNS/RafikNS"
-// import { Bytes, ethereum } from "@graphprotocol/graph-ts"
-// import {
-//   CreatedName,
-//   Messaging,
-//   RafikNS,
-//   Transaction,
-// } from "../generated/schema"
-
-// function getOrCreateTransaction(event: ethereum.Event): Transaction {
-//   let txId = event.transaction.hash.toHexString()
-//   let tx = Transaction.load(txId)
-//   if (tx == null) {
-//     tx = new Transaction(txId)
-//     tx.blockNumber = event.block.number
-//     tx.blockTimestamp = event.block.timestamp
-//     tx.transactionHash = event.transaction.hash
-//     tx.save()
-//   }
-//   return tx
-// }
-
-// function getOrCreateProtocol(): RafikNS {
-//   let protoId = "protocol"
-//   let proto = RafikNS.load(protoId)
-//   if (proto == null) {
-//     proto = new RafikNS(protoId)
-//     proto.contractAddress = Bytes.fromHexString("0x305F599fbCd667dbb9ca28960751430A1e8Fc3Ad")
-//     proto.save()
-//   }
-//   return proto
-// }
-
-// export function handleCreatedName(event: CreatedNameEvent): void {
-//   let tx = getOrCreateTransaction(event)
-//   let proto = getOrCreateProtocol()
-
-//   let username = event.params.username
-//   let id = username
-
-//   let user = CreatedName.load(id)
-//   if (user == null) {
-//     user = new CreatedName(id)
-//     user.username = username
-//     user.userAddress = event.params.userAddress
-//     user.imageURL = event.params.imageURL
-//     user.transaction = tx.id
-//     user.protocol = proto.id
-//       user.contractAddress = event.address;
-//     user.save()
-//   }
-// }
-
-// export function handleMessaging(event: MessagingEvent): void {
-//   let tx = getOrCreateTransaction(event)
-//   let proto = getOrCreateProtocol()
-
-//   let id = event.transaction.hash.concatI32(event.logIndex.toI32())
-//   let message = new Messaging(id)
-
-//   message.sender = event.params.sender
-//   message.reciever = event.params.reciever
-//   message.messageContent = event.params.messageContent
-//   message.transaction = tx.id
-//   message.protocol = proto.id
-//   message.contractAddress = event.address;
-
-//   let senderUser = CreatedName.load(event.params.sender)
-//   if (senderUser != null) {
-//     message.senderUser = senderUser.id
-//   }
-
-//   let receiverUser = CreatedName.load(event.params.reciever)
-  
-//   if (receiverUser != null) {
-//     message.receiverUser = receiverUser.id
-//   }
-
-//   message.save()
-// }
