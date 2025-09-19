@@ -1,0 +1,45 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-80889aed04e01b3b64ae2cbf990530064998050d",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/RafikNS.sol": "project/contracts/RafikNS.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": [
+        "project/:@chainlink/contracts/=npm/@chainlink/contracts@1.4.0/"
+      ],
+      "viaIR": true
+    },
+    "sources": {
+      "npm/@chainlink/contracts@1.4.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n// solhint-disable-next-line interface-starts-with-i\ninterface AggregatorV3Interface {\n  function decimals() external view returns (uint8);\n\n  function description() external view returns (string memory);\n\n  function version() external view returns (uint256);\n\n  function getRoundData(\n    uint80 _roundId\n  ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n\n  function latestRoundData()\n    external\n    view\n    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n}\n"
+      },
+      "project/contracts/RafikNS.sol": {
+        "content": "// SPDX-License-Identifier: GPL-3.0\n\npragma solidity ^0.8.28;\nimport {AggregatorV3Interface} from \"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol\";\n\n\ncontract RafikNS{    \n    function isAvailableName(string memory name) external view returns(bool){\n        return usernames[name].userAddress == address(0);\n    }\n\n    function createName(string memory name,string memory image) external{\n        require(usernames[name].userAddress == address(0),\"Name already taken\");\n        usernames[name].userAddress = msg.sender;\n        usernames[name].imageURL = image;\n        emit CreatedName(name, msg.sender, image);\n    }\n\n   function message(string memory sender,string memory messageReciever, string memory content) external {\n        counter+=1;\n        inbox[sender].push(Message({id:counter, reciever: messageReciever, content: content, sender: sender}));\n        emit Messaging(sender,messageReciever,content);\n    }\n\n    function getInbox(string memory name) external view returns (Message[] memory) {\n        return inbox[name];\n    }\n\n  \n    function getBtcFeed() public{\n        (,int256 answer,,,) = btcUSDTFeed.latestRoundData();\n        btcEthPrice = answer;\n        emit BtcUSDTPrice(btcEthPrice, block.timestamp); \n    }\n\n    function getEthPrice() public{\n        (,int256 answer,,,) = usdcETHFeed.latestRoundData();\n        usdtEthPrice = answer;\n        emit EthUSDTPrice(usdtEthPrice, block.timestamp); \n    }\n\n\n    function getPriceFeeds() external returns (int, int){\n        getBtcFeed();\n        getEthPrice();\n        return (btcEthPrice, usdtEthPrice);\n    }\n\n    constructor (){\n        btcUSDTFeed = AggregatorV3Interface(0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43);\n        usdcETHFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);\n    }\n\n    AggregatorV3Interface internal btcUSDTFeed;\n    AggregatorV3Interface internal usdcETHFeed;\n    User[] private users;\n    mapping (string => User) private usernames;\n    mapping (string => Message[]) private inbox;\n    uint public counter =  0;\n    int256 public  btcEthPrice;\n    int256 public  usdtEthPrice;\n\n    struct User{\n        address userAddress;\n        string imageURL;\n    }\n\n    struct Message{\n        uint id;\n        string sender;\n        string reciever;\n        string content;\n    }\n\n    event CreatedName(string username, address userAddress, string imageURL);\n    event Messaging(string sender, string reciever, string messageContent);\n    event BtcUSDTPrice(int256 btcPrice, uint256 time);\n    event EthUSDTPrice(int256 btcPrice, uint256 time);\n}\n"
+      }
+    }
+  }
+}

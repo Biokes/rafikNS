@@ -158,12 +158,13 @@ export const CONTRACT_ABI = [
       "type": "function"
     }
   ] as Abi;
-export const CONTRACT_ADDRESS: string = "0x305F599fbCd667dbb9ca28960751430A1e8Fc3Ad"
+export const CONTRACT_ADDRESS: string = "0x45584566FcFad6778439E908Fb3Ec308AB49eCd5"
 export const publicClient = createPublicClient({
   chain: sepolia,
   transport: http()
 })
 
+export const GRAPH_BASE_URL = "https://api.studio.thegraph.com/query/120726/rafik-ns/0.0.3";
 export const API_Key = "7d304383fec279b52a8a"
 export const API_SECRET =  "1d02a459f75b764c7716cd54e9ea2e5bc5f6fe80e24f7399b65047b0ee095d86"
 export const JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI1ZTljMWFjOS0zYjY5LTRlMTgtYWMzMC00YTMwN2M4MWIyNWUiLCJlbWFpbCI6ImF5b21pZGViaW9rZXMzMTMxQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI3ZDMwNDM4M2ZlYzI3OWI1MmE4YSIsInNjb3BlZEtleVNlY3JldCI6IjFkMDJhNDU5Zjc1Yjc2NGM3NzE2Y2Q1NGU5ZWEyZTViYzVmNmZlODBlMjRmNzM5OWI2NTA0N2IwZWUwOTVkODYiLCJleHAiOjE3ODk1NDUxMzN9.iXkonPvYMEIHVPGAnkbYPd6e9aZgX20ePgM8ozq2EdA"

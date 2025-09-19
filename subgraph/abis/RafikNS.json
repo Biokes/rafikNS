@@ -1,98 +1,183 @@
 [
+  { "type": "constructor", "inputs": [], "stateMutability": "nonpayable" },
   {
-    "anonymous": false,
+    "name": "BtcUSDTPrice",
+    "type": "event",
     "inputs": [
       {
+        "name": "btcPrice",
+        "type": "int256",
         "indexed": false,
-        "internalType": "string",
-        "name": "username",
-        "type": "string"
+        "internalType": "int256"
       },
       {
+        "name": "time",
+        "type": "uint256",
         "indexed": false,
-        "internalType": "address",
-        "name": "userAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "imageURL",
-        "type": "string"
+        "internalType": "uint256"
       }
     ],
+    "anonymous": false
+  },
+  {
     "name": "CreatedName",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
+    "type": "event",
     "inputs": [
       {
+        "name": "username",
+        "type": "string",
         "indexed": false,
-        "internalType": "string",
-        "name": "sender",
-        "type": "string"
+        "internalType": "string"
       },
       {
+        "name": "userAddress",
+        "type": "address",
         "indexed": false,
-        "internalType": "string",
-        "name": "reciever",
-        "type": "string"
+        "internalType": "address"
       },
       {
+        "name": "imageURL",
+        "type": "string",
         "indexed": false,
-        "internalType": "string",
-        "name": "messageContent",
-        "type": "string"
+        "internalType": "string"
       }
     ],
-    "name": "Messaging",
-    "type": "event"
+    "anonymous": false
   },
   {
+    "name": "EthUSDTPrice",
+    "type": "event",
     "inputs": [
-      { "internalType": "string", "name": "name", "type": "string" },
-      { "internalType": "string", "name": "image", "type": "string" }
+      {
+        "name": "btcPrice",
+        "type": "int256",
+        "indexed": false,
+        "internalType": "int256"
+      },
+      {
+        "name": "time",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
     ],
-    "name": "createName",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "anonymous": false
   },
   {
-    "inputs": [{ "internalType": "string", "name": "name", "type": "string" }],
+    "name": "Messaging",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "sender",
+        "type": "string",
+        "indexed": false,
+        "internalType": "string"
+      },
+      {
+        "name": "reciever",
+        "type": "string",
+        "indexed": false,
+        "internalType": "string"
+      },
+      {
+        "name": "messageContent",
+        "type": "string",
+        "indexed": false,
+        "internalType": "string"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "btcEthPrice",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "int256", "internalType": "int256" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "counter",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "createName",
+    "type": "function",
+    "inputs": [
+      { "name": "name", "type": "string", "internalType": "string" },
+      { "name": "image", "type": "string", "internalType": "string" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "getBtcFeed",
+    "type": "function",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "getEthPrice",
+    "type": "function",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
     "name": "getInbox",
+    "type": "function",
+    "inputs": [{ "name": "name", "type": "string", "internalType": "string" }],
     "outputs": [
       {
-        "components": [
-          { "internalType": "string", "name": "sender", "type": "string" },
-          { "internalType": "string", "name": "reciever", "type": "string" },
-          { "internalType": "string", "name": "content", "type": "string" }
-        ],
-        "internalType": "struct RafikNS.Message[]",
         "name": "",
-        "type": "tuple[]"
+        "type": "tuple[]",
+        "components": [
+          { "name": "id", "type": "uint256", "internalType": "uint256" },
+          { "name": "sender", "type": "string", "internalType": "string" },
+          { "name": "reciever", "type": "string", "internalType": "string" },
+          { "name": "content", "type": "string", "internalType": "string" }
+        ],
+        "internalType": "struct RafikNS.Message[]"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "view"
   },
   {
-    "inputs": [{ "internalType": "string", "name": "name", "type": "string" }],
-    "name": "isAvailableName",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "string", "name": "sender", "type": "string" },
-      { "internalType": "string", "name": "messageReciever", "type": "string" },
-      { "internalType": "string", "name": "content", "type": "string" }
+    "name": "getPriceFeeds",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      { "name": "", "type": "int256", "internalType": "int256" },
+      { "name": "", "type": "int256", "internalType": "int256" }
     ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "isAvailableName",
+    "type": "function",
+    "inputs": [{ "name": "name", "type": "string", "internalType": "string" }],
+    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "stateMutability": "view"
+  },
+  {
     "name": "message",
+    "type": "function",
+    "inputs": [
+      { "name": "sender", "type": "string", "internalType": "string" },
+      { "name": "messageReciever", "type": "string", "internalType": "string" },
+      { "name": "content", "type": "string", "internalType": "string" }
+    ],
     "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "usdtEthPrice",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "int256", "internalType": "int256" }],
+    "stateMutability": "view"
   }
 ]

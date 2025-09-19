@@ -8,24 +8,34 @@ import Home from "@/components/home"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Chats from './components/chats';
 import ProtectedRoute from './components/protectedRoute';
+import { UserProvider } from "@/contexts/userProvider.tsx";
+import ProtocolProvider from './contexts/protocolProvider';
 
 const queryClient = new QueryClient();
+
 function App() {
 
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider theme={lightTheme({ accentColor: '#e66000ff', accentColorForeground: 'white' })}>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/chats" element={
-                <ProtectedRoute>
-                  <Chats />
-                </ProtectedRoute>
-              } />
-            </Routes>
-          </Router>
+          <ProtocolProvider>
+            <UserProvider>
+              <Router>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route
+                    path="/chats"
+                    element={
+                      <ProtectedRoute>
+                      <Chats />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </Router>
+            </UserProvider>
+          </ProtocolProvider>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
