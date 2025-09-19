@@ -1,34 +1,37 @@
-type Transaction @entity(immutable: true) {
-  id: ID!
+type BtcUSDTPrice @entity(immutable: true) {
+  id: Bytes!
+  btcPrice: BigInt! # int256
+  time: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
 type CreatedName @entity(immutable: true) {
-  id: ID!
-  username: String!
-  userAddress: Bytes!
-  imageURL: String!
-  transaction: Transaction!
-  protocol: RafikNS!
-  sentMessages: [Messaging!]! @derivedFrom(field: "senderUser")
-  receivedMessages: [Messaging!]! @derivedFrom(field: "receiverUser")
+  id: Bytes!
+  username: String! # string
+  userAddress: Bytes! # address
+  imageURL: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EthUSDTPrice @entity(immutable: true) {
+  id: Bytes!
+  btcPrice: BigInt! # int256
+  time: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
 
 type Messaging @entity(immutable: true) {
   id: Bytes!
-  sender: String!
-  reciever: String!
-  messageContent: String!
-  transaction: Transaction!
-  protocol: RafikNS!
-  senderUser: CreatedName!
-  receiverUser: CreatedName!
-}
-
-type RafikNS @entity(immutable:false){
-  id: ID!
-  users: [CreatedName!]! @derivedFrom(field: "protocol")
-  messages: [Messaging!]! @derivedFrom(field: "protocol")
+  sender: String! # string
+  reciever: String! # string
+  messageContent: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }

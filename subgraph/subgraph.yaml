@@ -8,24 +8,28 @@ dataSources:
     name: RafikNS
     network: sepolia
     source:
-      address: "0x305F599fbCd667dbb9ca28960751430A1e8Fc3Ad"
+      address: "0x45584566FcFad6778439E908Fb3Ec308AB49eCd5"
       abi: RafikNS
-      startBlock: 9223636
+      startBlock: 9234201
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
+        - BtcUSDTPrice
         - CreatedName
+        - EthUSDTPrice
         - Messaging
-        - RafikNS
-        - Transaction
       abis:
         - name: RafikNS
           file: ./abis/RafikNS.json
       eventHandlers:
+        - event: BtcUSDTPrice(int256,uint256)
+          handler: handleBtcUSDTPrice
         - event: CreatedName(string,address,string)
           handler: handleCreatedName
+        - event: EthUSDTPrice(int256,uint256)
+          handler: handleEthUSDTPrice
         - event: Messaging(string,string,string)
           handler: handleMessaging
       file: ./src/rafik-ns.ts

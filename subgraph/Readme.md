@@ -1,1 +1,0 @@
-//https://api.studio.thegraph.com/query/120726/rafik-ns/0.0.2

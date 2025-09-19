@@ -1,6 +1,32 @@
 import { newMockEvent } from "matchstick-as"
-import { ethereum, Address } from "@graphprotocol/graph-ts"
-import { CreatedName, Messaging } from "../generated/RafikNS/RafikNS"
+import { ethereum, BigInt, Address } from "@graphprotocol/graph-ts"
+import {
+  BtcUSDTPrice,
+  CreatedName,
+  EthUSDTPrice,
+  Messaging
+} from "../generated/RafikNS/RafikNS"
+
+export function createBtcUSDTPriceEvent(
+  btcPrice: BigInt,
+  time: BigInt
+): BtcUSDTPrice {
+  let btcUsdtPriceEvent = changetype<BtcUSDTPrice>(newMockEvent())
+
+  btcUsdtPriceEvent.parameters = new Array()
+
+  btcUsdtPriceEvent.parameters.push(
+    new ethereum.EventParam(
+      "btcPrice",
+      ethereum.Value.fromSignedBigInt(btcPrice)
+    )
+  )
+  btcUsdtPriceEvent.parameters.push(
+    new ethereum.EventParam("time", ethereum.Value.fromUnsignedBigInt(time))
+  )
+
+  return btcUsdtPriceEvent
+}
 
 export function createCreatedNameEvent(
   username: string,
@@ -25,6 +51,27 @@ export function createCreatedNameEvent(
   )
 
   return createdNameEvent
+}
+
+export function createEthUSDTPriceEvent(
+  btcPrice: BigInt,
+  time: BigInt
+): EthUSDTPrice {
+  let ethUsdtPriceEvent = changetype<EthUSDTPrice>(newMockEvent())
+
+  ethUsdtPriceEvent.parameters = new Array()
+
+  ethUsdtPriceEvent.parameters.push(
+    new ethereum.EventParam(
+      "btcPrice",
+      ethereum.Value.fromSignedBigInt(btcPrice)
+    )
+  )
+  ethUsdtPriceEvent.parameters.push(
+    new ethereum.EventParam("time", ethereum.Value.fromUnsignedBigInt(time))
+  )
+
+  return ethUsdtPriceEvent
 }
 
 export function createMessagingEvent(
