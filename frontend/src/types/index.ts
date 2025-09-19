@@ -11,3 +11,25 @@ export type UserContextType ={
   user: BaseUser | null;
   setUserDetails : (user:BaseUser)=>void
 }
+export interface User {
+  imageURL: string;
+  recievedMessages: [];
+  sentMessages: [];
+  username: string;
+  userAddress: string;
+}
+export interface RafikNS { 
+  rafikNSs: {
+    users: User[]
+  }[]
+}
+
+export interface UserListProps {
+  selectedUserId?: string;
+  onUserSelect: (userId: string) => void;
+  className?: string;
+}
+export interface Protocol { 
+    data: RafikNS | null;
+    setProtocolData: (rafikNs:RafikNS) => void;
+}

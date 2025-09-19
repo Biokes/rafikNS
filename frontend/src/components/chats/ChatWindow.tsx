@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Smile, Paperclip, Phone, Video, MoreVertical } from "lucide-react";
+import { Send, Smile, Paperclip, Phone, Video, MoreVertical, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ interface Message {
 interface ChatWindowProps {
   userId?: string;
   className?: string;
+  handleBackToList?: () => void;
 }
 
 const mockMessages: Message[] = [
@@ -59,7 +60,7 @@ const mockUser = {
   status: "online",
 };
 
-export default function ChatWindow({ userId, className }: ChatWindowProps) {
+export default function ChatWindow({ userId, className, handleBackToList }: ChatWindowProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -115,18 +116,22 @@ export default function ChatWindow({ userId, className }: ChatWindowProps) {
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
-      {/* Chat Header */}
-      <div className="flex items-center justify-between p-4 border-b border-chat-border">
+      <div className="flex items-center justify-between  px-4 py-2 border-b border-chat-border">
         <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
-            <AvatarFallback className="bg-primary text-primary-foreground">
-              {mockUser.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </AvatarFallback>
-          </Avatar>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="icon" onClick={handleBackToList} className="text-foreground hover:bg-accent">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
+              <AvatarFallback className="bg-primary text-primary-foreground">
+                {mockUser.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+              </AvatarFallback>
+            </Avatar>
+          </div>
           <div>
             <h3 className="font-semibold text-chat-text">{mockUser.name}</h3>
             <p className="text-sm text-chat-text-muted">
@@ -146,8 +151,7 @@ export default function ChatWindow({ userId, className }: ChatWindowProps) {
           </Button>
         </div>
       </div>
-
-      {/* Messages */}
+      
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg) => (
           <div
@@ -187,20 +191,15 @@ export default function ChatWindow({ userId, className }: ChatWindowProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Message Input */}
-      <div className="p-4 border-t border-chat-border">
-        <div className="flex items-end gap-2">
+      <div className="px-2 pt-2 border-t border-chat-border">
+        <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="text-chat-text hover:bg-chat-hover">
             <Paperclip className="h-5 w-5" />
           </Button>
           <div className="flex-1 relative">
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
+            <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={1}
+              onKeyPress={handleKeyPress} placeholder="Type a message..."
               className="w-full px-4 py-3 pr-12 bg-chat-hover border border-chat-border rounded-2xl text-chat-text placeholder-chat-text-muted resize-none focus:outline-none focus:ring-2 focus:ring-primary max-h-32"
-              rows={1}
             />
             <Button
               variant="ghost"
@@ -210,11 +209,8 @@ export default function ChatWindow({ userId, className }: ChatWindowProps) {
               <Smile className="h-5 w-5" />
             </Button>
           </div>
-          <Button
-            onClick={handleSendMessage}
-            disabled={!message.trim()}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full p-3"
-          >
+          <Button onClick={handleSendMessage} disabled={!message.trim()}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full p-3">
             <Send className="h-5 w-5" />
           </Button>
         </div>

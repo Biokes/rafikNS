@@ -1,7 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Kings&family=Niconne&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Kings&family=Niconne&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
-
 
 @custom-variant dark (&:is(.dark *));
 :root {
@@ -29,11 +28,11 @@
   --popover-foreground: #1a1a1a;
 
   /* Brand color (deep orange) */
-  --primary: #E76001;
+  --primary: #e76001;
   --primary-foreground: #ffffff;
 
   /* Secondary (lighter orange tint) */
-  --secondary: #FFD7BF;
+  --secondary: #ffd7bf;
   --secondary-foreground: #2a2a2a;
 
   /* Muted neutrals */
@@ -41,34 +40,34 @@
   --muted-foreground: #737373;
 
   /* Accent (orange highlight variant) */
-  --accent: #FF8A33;
+  --accent: #ff8a33;
   --accent-foreground: #ffffff;
 
   /* Errors/destructive */
-  --destructive: #D64545;
+  --destructive: #d64545;
   --destructive-foreground: #ffffff;
 
   /* Borders / inputs / ring */
   --border: #e5e5e5;
   --input: #e5e5e5;
-  --ring: #E76001;
+  --ring: #e76001;
 
   /* Charts (orange-centric palette) */
-  --chart-1: #E76001;
-  --chart-2: #FF8A33;
-  --chart-3: #FFB066;
-  --chart-4: #FFD7BF;
-  --chart-5: #732F00;
+  --chart-1: #e76001;
+  --chart-2: #ff8a33;
+  --chart-3: #ffb066;
+  --chart-4: #ffd7bf;
+  --chart-5: #732f00;
 
   /* Sidebar */
   --sidebar: #fff8f5;
   --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #E76001;
+  --sidebar-primary: #e76001;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #FF8A33;
+  --sidebar-accent: #ff8a33;
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #e5e5e5;
-  --sidebar-ring: #E76001;
+  --sidebar-ring: #e76001;
 }
 
 .dark {
@@ -79,7 +78,7 @@
   --popover: #2a2a2a;
   --popover-foreground: #ffffff;
 
-  --primary: #E76001;
+  --primary: #e76001;
   --primary-foreground: #ffffff;
 
   --secondary: #4a2d20;
@@ -88,39 +87,52 @@
   --muted: #333333;
   --muted-foreground: #a1a1a1;
 
-  --accent: #FF8A33;
+  --accent: #ff8a33;
   --accent-foreground: #ffffff;
 
-  --destructive: #D64545;
+  --destructive: #d64545;
   --destructive-foreground: #ffffff;
 
   --border: #333333;
   --input: #404040;
-  --ring: #E76001;
+  --ring: #e76001;
 
-  --chart-1: #E76001;
-  --chart-2: #FF8A33;
-  --chart-3: #FFB066;
-  --chart-4: #FFD7BF;
-  --chart-5: #732F00;
+  --chart-1: #e76001;
+  --chart-2: #ff8a33;
+  --chart-3: #ffb066;
+  --chart-4: #ffd7bf;
+  --chart-5: #732f00;
 
   --sidebar: #1f1f1f;
   --sidebar-foreground: #ffffff;
-  --sidebar-primary: #E76001;
+  --sidebar-primary: #e76001;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #FF8A33;
+  --sidebar-accent: #ff8a33;
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #333333;
-  --sidebar-ring: #E76001;
+  --sidebar-ring: #e76001;
 }
 
+body::-webkit-scrollbar {
+  width: 3px;
+  height: 6px;
+}
 
+body::-webkit-scrollbar-thumb {
+  background-color: rgb(255, 113, 5);
+  border-radius: 10px;
+}
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  body {
-    @apply bg-background text-foreground;
-    font-weight: 400;
-    font-style: normal;
-  }
+body {
+  @apply bg-background text-foreground;
+  font-weight: 400;
+  font-style: normal;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
 button:hover {
   @apply transform transition-all duration-400 scale-[1.07] ease-in-out;
 }
@@ -171,6 +183,6 @@ button:hover {
     @apply bg-background text-foreground;
   }
 }
-.name{
-      font-family: "Kings";
+.name {
+  font-family: "Kings";
 }

@@ -1,7 +1,6 @@
-import {type JSX, useEffect} from "react";
+import {type JSX} from "react";
 import {Navigate} from "react-router-dom";
 import {useAccount} from "wagmi";
-import {gql, request} from 'graphql-request'
 import {useUser} from "@/contexts/userProvider.tsx";
 
 interface ProtectedRouteProps {

@@ -29,7 +29,7 @@ export default function HeroSection() {
     const {address, isConnected,} = useAccount()
     const {openConnectModal} = useConnectModal()
     const {writeContractAsync} = useWriteContract()
-    const [users, setUsers] = useState<UserProfiles>({createdNames: []})
+    const [users] = useState<UserProfiles>({createdNames: []})
     const {setUserDetails} = useUser()
 
     useEffect(() => {
@@ -86,9 +86,7 @@ export default function HeroSection() {
                 body: formData,
             });
             const response = await request.json();
-            // console.log("CID:  ",response.data.cid)
             setPreview(`https://ipfs.io/ipfs/${response.data.cid}`)
-            // console.log(preview)
         } catch (error) {
             toast.error("unable to upload image")
             console.log("error: ", error)

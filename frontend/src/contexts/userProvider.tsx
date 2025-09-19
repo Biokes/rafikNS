@@ -1,10 +1,10 @@
-import {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import type {BaseUser, UserContextType, UserProfiles} from "@/types";
+import {type ReactNode, useEffect, useState} from "react";
+import type {BaseUser, UserProfiles} from "@/types";
 import {useAccount} from "wagmi";
 import {gql, request} from "graphql-request";
 import {GRAPH_BASE_URL} from "@/config";
+import { UserContext } from "./useUser";
 
-const UserContext = createContext<UserContextType| undefined>(undefined)
 const GET_USER_BY_ADDRESS = gql`
   query GetUserByAddress($address: Bytes!) {
     createdNames(where: { userAddress: $address }) {
@@ -42,12 +42,4 @@ export function UserProvider({children}:{children: ReactNode}){
             {children}
         </UserContext.Provider>
     )
-}
-
-export function useUser() {
-    const context = useContext(UserContext);
-    if (!context) {
-        throw new Error("useUser must be used inside UserProvider");
-    }
-    return context;
 }
