@@ -1,10 +1,14 @@
+type Transaction @entity(immutable: true){
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
 type BtcUSDTPrice @entity(immutable: true) {
   id: Bytes!
   btcPrice: BigInt! # int256
   time: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  transaction: Transaction!
 }
 
 type CreatedName @entity(immutable: true) {
@@ -12,26 +16,29 @@ type CreatedName @entity(immutable: true) {
   username: String! # string
   userAddress: Bytes! # address
   imageURL: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  transaction: Transaction!
 }
 
 type EthUSDTPrice @entity(immutable: true) {
   id: Bytes!
   btcPrice: BigInt! # int256
   time: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  transaction: Transaction!
 }
 
 type Messaging @entity(immutable: true) {
   id: Bytes!
-  sender: String! # string
-  reciever: String! # string
-  messageContent: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  sender: String!
+  reciever: String!
+  messageContent: String!
+  transaction: Transaction!
+  protocol: Protocol!
+}
+
+type Protocol @entity(immtuable: false ){
+  id: String!
+  users: [Users!]! @derivedFrom (field : "protocol") 
+  messages: [Messaging!]! @derivedFrom (field : "protocol") 
+  ethToUsdtPrice: BigInt!
+  btcToUsdtPrice: BigInt!
 }
