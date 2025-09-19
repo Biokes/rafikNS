@@ -16,7 +16,7 @@ import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} fro
 import {useNavigate} from "react-router-dom";
 import type {UserProfiles} from "@/types"
 import type {Hex} from "viem";
-import {useUser} from "@/contexts/userProvider.tsx";
+import { useUser } from "@/contexts/useUser";
 
 export default function HeroSection() {
     const [isLoading, setLoading] = useState(false)

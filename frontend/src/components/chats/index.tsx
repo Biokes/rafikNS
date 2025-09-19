@@ -1,33 +1,18 @@
 import Chat from "./Chat";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Button } from "@/components/ui/button";
-import { useUser } from "@/contexts/userProvider";
-import { Bell, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useUser } from "@/contexts/useUser";
 
 export default function ChatPage() {
     const { openConnectModal } = useConnectModal();
     const { user } = useUser();
 
-    const notifications = [
-        {
-            id: 1,
-            message: "New message from Alice",
-            time: "2 minutes ago",
-            read: false,
-        },
-        {
-            id: 2,
-            message: "Bob registered a new name",
-            time: "1 hour ago",
-            read: true,
-        }
-    ];
 
     function DisConnectButton() {
         return (
@@ -40,11 +25,6 @@ export default function ChatPage() {
                         <p className="hidden md:block">
                             {user ? `${user?.username}.rafik` : 'Anonymous'}
                         </p>
-                        <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary flex items-center justify-center">
-                            <span className="text-[10px] font-medium text-primary-foreground">
-                                {notifications.filter(n => !n.read).length}
-                            </span>
-                        </div>
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80" align="end">
@@ -56,25 +36,6 @@ export default function ChatPage() {
                             <div>
                                 <p className="font-medium">{user ? `${user.username}.rafik` : 'Anonymous'}</p>
                             </div>
-                        </div>
-                        <div>
-                            <h4 className="font-medium px-2 mb-2">Notifications</h4>
-                            <ScrollArea className="h-[200px]">
-                                <div className="space-y-2 px-2">
-                                    {notifications.map((notification) => (
-                                        <div key={notification.id} className="flex items-start gap-2 p-2 rounded-lg bg-muted/50">
-                                            <Bell className="h-4 w-4 mt-1" />
-                                            <div className="flex-1">
-                                                <p className="text-sm">{notification.message}</p>
-                                                <p className="text-xs text-muted-foreground">{notification.time}</p>
-                                            </div>
-                                            {!notification.read && (
-                                                <div className="h-2 w-2 rounded-full bg-primary mt-1" />
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            </ScrollArea>
                         </div>
                         <Button className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
                             variant="ghost" onClick={() => openConnectModal?.()}>

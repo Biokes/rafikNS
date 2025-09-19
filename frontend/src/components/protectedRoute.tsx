@@ -1,7 +1,7 @@
+import { useUser } from "@/contexts/useUser";
 import {type JSX} from "react";
 import {Navigate} from "react-router-dom";
 import {useAccount} from "wagmi";
-import {useUser} from "@/contexts/userProvider.tsx";
 
 interface ProtectedRouteProps {
     children: JSX.Element;

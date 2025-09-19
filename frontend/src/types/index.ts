@@ -9,7 +9,7 @@ export type UserProfiles = {
 };
 export type UserContextType ={
   user: BaseUser | null;
-  setUserDetails : (user:BaseUser)=>void
+  setUserDetails: React.Dispatch<React.SetStateAction<null | BaseUser>>;
 }
 export interface User {
   imageURL: string;
@@ -25,8 +25,8 @@ export interface RafikNS {
 }
 
 export interface UserListProps {
-  selectedUserId?: string;
-  onUserSelect: (userId: string) => void;
+  selectedUser: User;
+  onUserSelect: (userId: User) => void;
   className?: string;
 }
 export interface Protocol { 
