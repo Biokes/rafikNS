@@ -7,6 +7,7 @@ import type { User } from "@/types";
 
 export default function Chat() {
   const [selectedUserId, setSelectedUserId] = useState<User>({
+    id:"",
     imageURL: "",
     recievedMessages: [],
     sentMessages: [],
@@ -24,6 +25,7 @@ export default function Chat() {
   const handleBackToList = () => {
     setShowChat(false);
     setSelectedUserId({
+      id:"",
       imageURL: "",
       recievedMessages: [],
       sentMessages: [],
