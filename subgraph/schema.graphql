@@ -39,9 +39,10 @@ type User @entity(immutable:true){
   protocol: Protocol!
   username: String!
   userAddress: String!
+  imageURL: String!
 }
 type Protocol @entity(immutable: false ){
-  id: Bytes!
+  id: String!
   users: [User!]! @derivedFrom (field : "protocol") 
   messages: [Messaging!]! @derivedFrom (field : "protocol") 
   ethToUsdtPrice: BigInt!

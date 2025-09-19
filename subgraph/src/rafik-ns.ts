@@ -30,9 +30,9 @@ function getOrCreateTransaction(event: ethereum.Event): Transaction {
 
 function getOrCreateProtocol(): Protocol {
   let protoId = "protocol"
-  let proto = Protocol.load(Bytes.fromHexString(protoId))
+  let proto = Protocol.load(protoId)
   if (proto == null) {
-    proto = new Protocol(Bytes.fromHexString(protoId))
+    proto = new Protocol(protoId)
     proto.ethToUsdtPrice = BigInt.fromI32(0)
     proto.btcToUsdtPrice = BigInt.fromI32(0)
     proto.save()
@@ -41,7 +41,7 @@ function getOrCreateProtocol(): Protocol {
 }
 
 export function handleBtcUSDTPrice(event: BtcUSDTPriceEvent): void {
-  let id = event.transaction.hash.toHexString() + event.logIndex.toString()
+  let id = event.transaction.hash.toHexString()
   let entity = new BtcUSDTPrice(Bytes.fromHexString(id))
 
   entity.btcPrice = event.params.btcPrice
@@ -56,7 +56,7 @@ export function handleBtcUSDTPrice(event: BtcUSDTPriceEvent): void {
 }
 
 export function handleEthUSDTPrice(event: EthUSDTPriceEvent): void {
-  let id = event.transaction.hash.toHexString() + event.logIndex.toString()
+  let id = event.transaction.hash.toHexString()
   let entity = new EthUSDTPrice(Bytes.fromHexString(id))
 
   entity.btcPrice = event.params.btcPrice
@@ -71,7 +71,7 @@ export function handleEthUSDTPrice(event: EthUSDTPriceEvent): void {
 }
 
 export function handleCreatedName(event: CreatedNameEvent): void {
-  let id = event.transaction.hash.toHexString() + event.logIndex.toString()
+  let id = event.transaction.hash.toHexString()
   let entity = new CreatedName(Bytes.fromHexString(id))
 
   entity.username = event.params.username
@@ -87,12 +87,13 @@ export function handleCreatedName(event: CreatedNameEvent): void {
     user.protocol = getOrCreateProtocol().id
     user.username = event.params.username
     user.userAddress = event.params.userAddress.toHexString()
+    user.imageURL = event.params.imageURL
     user.save()
   }
 }
 
 export function handleMessaging(event: MessagingEvent): void {
-  let id = event.transaction.hash.toHexString() +event.logIndex.toString()
+  let id = event.transaction.hash.toHexString()
   let entity = new Messaging((Bytes.fromHexString(id)))
   entity.sender = event.params.sender
   entity.reciever = event.params.reciever
