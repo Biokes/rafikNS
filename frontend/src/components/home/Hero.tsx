@@ -1,21 +1,21 @@
-import {MessageSquare, Search, User} from "lucide-react"
+import { MessageSquare, Search, User } from "lucide-react"
 import Particles from "./partiles"
-import {Popover, PopoverTrigger, PopoverContent} from "@/components/ui/popover"
-import {Input} from "@/components/ui/input"
-import {Skeleton} from "../ui/skeleton"
-import {useEffect, useState} from "react"
-import {Button} from "../ui/button"
-import {toast} from "sonner"
-import {cn} from "@/lib/utils"
-import {Card} from "../ui/card"
-import {CONTRACT_ABI, CONTRACT_ADDRESS, JWT} from "@/config"
-import {useAccount} from "wagmi"
-import {useConnectModal} from "@rainbow-me/rainbowkit"
-import {useWriteContract} from "wagmi"
-import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "../ui/dialog"
-import {useNavigate} from "react-router-dom";
-import type {UserProfiles} from "@/types"
-import type {Hex} from "viem";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+import { Input } from "@/components/ui/input"
+import { Skeleton } from "../ui/skeleton"
+import { useEffect, useState } from "react"
+import { Button } from "../ui/button"
+import { toast } from "sonner"
+import { cn } from "@/lib/utils"
+import { Card } from "../ui/card"
+import { CONTRACT_ABI, CONTRACT_ADDRESS, JWT } from "@/config"
+import { useAccount } from "wagmi"
+import { useConnectModal } from "@rainbow-me/rainbowkit"
+import { useWriteContract } from "wagmi"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog"
+import { useNavigate } from "react-router-dom";
+import type { UserProfiles } from "@/types"
+import { ContractFunctionExecutionError, type Hex } from "viem";
 import { useUser } from "@/contexts/useUser";
 
 export default function HeroSection() {
@@ -26,11 +26,11 @@ export default function HeroSection() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
     const navigate = useNavigate()
-    const {address, isConnected,} = useAccount()
-    const {openConnectModal} = useConnectModal()
-    const {writeContractAsync} = useWriteContract()
-    const [users] = useState<UserProfiles>({createdNames: []})
-    const {setUserDetails} = useUser()
+    const { address, isConnected, } = useAccount()
+    const { openConnectModal } = useConnectModal()
+    const { writeContractAsync } = useWriteContract()
+    const [users] = useState<UserProfiles>({ createdNames: [] })
+    const { setUserDetails } = useUser()
 
     useEffect(() => {
         if (isConnected && isDialogOpen) {
@@ -96,8 +96,8 @@ export default function HeroSection() {
     return (
         <div className="relative w-full h-screen overflow-hidden">
             <Particles particleColors={["#ffffff", "#ffa500"]} particleCount={500} particleSpread={2}
-                       speed={0.5} particleBaseSize={100} moveParticlesOnHover alphaParticles={false}
-                       disableRotation={false}
+                speed={0.5} particleBaseSize={100} moveParticlesOnHover alphaParticles={false}
+                disableRotation={false}
             />
             <div
                 className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-8 -translate-y-8 md:-translate-y-16">
@@ -124,9 +124,9 @@ export default function HeroSection() {
                         />
                         <PopoverTrigger asChild>
                             <Button size="icon" variant="ghost" onClick={search}
-                                    disabled={userInput.length < 1}
-                                    className="text-white hover:bg-white/20 cursor-pointer">
-                                <Search className="w-5 h-5"/>
+                                disabled={userInput.length < 1}
+                                className="text-white hover:bg-white/20 cursor-pointer">
+                                <Search className="w-5 h-5" />
                             </Button>
                         </PopoverTrigger>
                     </div>
@@ -136,7 +136,7 @@ export default function HeroSection() {
                             <h4 className="font-medium">{isLoading ? "Checking name availability..." : !isValidName ? "Lucky you 🎉🎉🎉" : "Ooos! 😔😔🥲"}</h4>
                             {isLoading ? (
                                 <div className="space-y-2 w-full">
-                                    <Skeleton className="h-12 w-full rounded-md border border-gray-200 shadow-lg"/>
+                                    <Skeleton className="h-12 w-full rounded-md border border-gray-200 shadow-lg" />
                                 </div>
                             ) : (
                                 !isValidName ?
@@ -153,14 +153,14 @@ export default function HeroSection() {
                 </Popover>
                 <div className="flex flex-col md:flex-row justify-center items-center gap-2 max-w-2xl mx-auto">
                     <Card className={cn("gap-1", "text-center space-y-3 p-3 max-w-[200px]")}>
-                        <User className="h-5 w-8 text-primary mx-auto"/>
+                        <User className="h-5 w-8 text-primary mx-auto" />
                         <h3 className="font-semibold ">Claim Your Identity</h3>
                         <p className="text-[0.75rem] text-muted-foreground">
                             Secure your unique name on the decentralized network
                         </p>
                     </Card>
                     <Card className={cn("gap-1", "text-center space-y-3 p-3 max-w-[200px]")}>
-                        <MessageSquare className="h-5 w-8 text-primary mx-auto"/>
+                        <MessageSquare className="h-5 w-8 text-primary mx-auto" />
                         <h3 className="font-semibold ">Connect & Chat</h3>
                         <p className="text-[0.75rem] text-muted-foreground">
                             connect with people through their names
@@ -178,7 +178,7 @@ export default function HeroSection() {
                         <DialogTitle>Create Profile</DialogTitle>
                         <DialogDescription className="text-gray-800 py-3">
                             You are about to claim: <strong className="text-orange-500 capitalize text-[1.2rem]">
-                            <br/>{userInput}.rafik</strong>
+                                <br />{userInput}.rafik</strong>
                         </DialogDescription>
                     </DialogHeader>
 
@@ -223,6 +223,7 @@ export default function HeroSection() {
                                     functionName: "createName",
                                     args: [userInput.toLowerCase(), preview as string],
                                 })
+
                                 setUserDetails({
                                     id: "",
                                     username: userInput,
@@ -232,10 +233,14 @@ export default function HeroSection() {
                                 toast.success("Name registered successfully!")
                                 setOpenDialog(false)
                                 navigate("/chats")
-                                console.log("Navigated")
                             } catch (err) {
-                                console.error("name creation error: ", err)
-                                toast.error("Something went wrong while creating name")
+                                if (err instanceof ContractFunctionExecutionError) {
+                                    toast.error(err.details.split(":").splice(-1))
+                                }
+                                else {
+                                    console.error("name creation error: ", err)
+                                    toast.error("Something went wrong while creating name")
+                                }
                             } finally {
                                 setLoading(false)
                             }

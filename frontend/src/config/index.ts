@@ -2,6 +2,7 @@ import {sepolia} from 'wagmi/chains';
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import type { Abi } from 'viem';
 import { createPublicClient, http } from 'viem'
+import { gql } from 'graphql-request';
 
 export const config = getDefaultConfig({
     appName: 'My RainbowKit App',
@@ -10,7 +11,31 @@ export const config = getDefaultConfig({
     ssr: false,
 })
 
-export const CONTRACT_ABI = [
+export const CONTRACT_ABI =[
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "btcPrice",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "time",
+          "type": "uint256"
+        }
+      ],
+      "name": "BtcUSDTPrice",
+      "type": "event"
+    },
     {
       "anonymous": false,
       "inputs": [
@@ -41,6 +66,25 @@ export const CONTRACT_ABI = [
       "inputs": [
         {
           "indexed": false,
+          "internalType": "int256",
+          "name": "btcPrice",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "time",
+          "type": "uint256"
+        }
+      ],
+      "name": "EthUSDTPrice",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
           "internalType": "string",
           "name": "sender",
           "type": "string"
@@ -62,6 +106,32 @@ export const CONTRACT_ABI = [
       "type": "event"
     },
     {
+      "inputs": [],
+      "name": "btcEthPrice",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "counter",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "string",
@@ -80,6 +150,20 @@ export const CONTRACT_ABI = [
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "getBtcFeed",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getEthPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "string",
@@ -91,6 +175,11 @@ export const CONTRACT_ABI = [
       "outputs": [
         {
           "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
             {
               "internalType": "string",
               "name": "sender",
@@ -113,6 +202,24 @@ export const CONTRACT_ABI = [
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getPriceFeeds",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -156,6 +263,19 @@ export const CONTRACT_ABI = [
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "usdtEthPrice",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     }
   ] as Abi;
 export const CONTRACT_ADDRESS: string = "0x45584566FcFad6778439E908Fb3Ec308AB49eCd5"
@@ -164,7 +284,30 @@ export const publicClient = createPublicClient({
   transport: http()
 })
 
-export const GRAPH_BASE_URL = "https://api.studio.thegraph.com/query/120726/rafik-ns/0.0.3";
+export const GRAPH_BASE_URL = "https://api.studio.thegraph.com/query/120726/rafik-ns/0.0.5";
 export const API_Key = "7d304383fec279b52a8a"
 export const API_SECRET =  "1d02a459f75b764c7716cd54e9ea2e5bc5f6fe80e24f7399b65047b0ee095d86"
 export const JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI1ZTljMWFjOS0zYjY5LTRlMTgtYWMzMC00YTMwN2M4MWIyNWUiLCJlbWFpbCI6ImF5b21pZGViaW9rZXMzMTMxQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI3ZDMwNDM4M2ZlYzI3OWI1MmE4YSIsInNjb3BlZEtleVNlY3JldCI6IjFkMDJhNDU5Zjc1Yjc2NGM3NzE2Y2Q1NGU5ZWEyZTViYzVmNmZlODBlMjRmNzM5OWI2NTA0N2IwZWUwOTVkODYiLCJleHAiOjE3ODk1NDUxMzN9.iXkonPvYMEIHVPGAnkbYPd6e9aZgX20ePgM8ozq2EdA"
+export const PROTOCOL_QUERY = gql`
+query{
+  protocol(id: "protocol") {
+    btcToUsdtPrice
+    ethToUsdtPrice
+    users(first: 1000) {
+      userAddress
+      username
+      id
+      imageURL
+    }
+    messages(first: 1000, orderBy: id) {
+      id
+      messageContent
+      reciever
+      sender
+      transaction {
+        blockTimestamp
+      }
+    }
+  } 
+}
+`

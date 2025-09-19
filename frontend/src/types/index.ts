@@ -11,17 +11,24 @@ export type UserContextType ={
   user: BaseUser | null;
   setUserDetails: React.Dispatch<React.SetStateAction<null | BaseUser>>;
 }
-export interface User {
-  imageURL: string;
+export interface User extends BaseUser{
   recievedMessages: [];
   sentMessages: [];
-  username: string;
-  userAddress: string;
+}
+export interface Message { 
+  id: string;
+  messageContent: string;
+  reciever: string;
+  sender: string;
+  transaction: {
+    blockTimestamp:number
+  }
 }
 export interface RafikNS { 
-  rafikNSs: {
-    users: User[]
-  }[]
+  btcToUsdtPrice: number;
+  ethToUsdtPrice: number;
+  users: User[];
+  messages:Message[]
 }
 
 export interface UserListProps {
@@ -30,6 +37,6 @@ export interface UserListProps {
   className?: string;
 }
 export interface Protocol { 
-    data: RafikNS | null;
+    data: RafikNS;
     setProtocolData: (rafikNs:RafikNS) => void;
 }

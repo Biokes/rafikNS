@@ -12,8 +12,8 @@ export default function Home() {
     const navigate = useNavigate()
     const { setUserDetails } = useUser()
     useEffect(() => {
-        if (!address || !data?.rafikNSs?.[0]?.users) return;
-        const matchedUser = data.rafikNSs[0].users.find(
+        if (!address || !data?.users) return;
+        const matchedUser = data!.users.find(
             (user) => user.userAddress.toLowerCase() === address.toLowerCase()
         );
         if (matchedUser) {

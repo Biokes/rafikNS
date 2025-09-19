@@ -27,7 +27,7 @@ export default function UserList({
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {protocol!.rafikNSs[0]?.users.map((user) => (
+        {protocol!.users.map((user) => (
           <div
             key={user.username}
             onClick={() => onUserSelect(user)}
