@@ -8,7 +8,7 @@ import { Button } from "../ui/button"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { Card } from "../ui/card"
-import { CONTRACT_ABI, CONTRACT_ADDRESS, JWT } from "@/config"
+import { CONTRACT_ABI, CONTRACT_ADDRESS, JWT, publicClient } from "@/config"
 import { useAccount } from "wagmi"
 import { useConnectModal } from "@rainbow-me/rainbowkit"
 import { useWriteContract } from "wagmi"
@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import type { UserProfiles } from "@/types"
 import { ContractFunctionExecutionError, type Hex } from "viem";
 import { useUser } from "@/contexts/useUser";
+import { waitForTransactionReceipt } from "viem/actions"
 
 export default function HeroSection() {
     const [isLoading, setLoading] = useState(false)
@@ -74,7 +75,6 @@ export default function HeroSection() {
             if (!selectedFile) {
                 toast.error("No file selected")
             }
-            console.log("Selected file : ", selectedFile)
             const formData = new FormData();
             formData.append("file", selectedFile);
             formData.append("network", "public")
@@ -217,13 +217,13 @@ export default function HeroSection() {
                                 if (selectedFile) {
                                     await handleUploadFile(selectedFile)
                                 }
-                                await writeContractAsync({
+                                const txHash = await writeContractAsync({
                                     address: CONTRACT_ADDRESS as Hex,
                                     abi: CONTRACT_ABI,
                                     functionName: "createName",
                                     args: [userInput.toLowerCase(), preview as string],
                                 })
-
+                                await waitForTransactionReceipt(publicClient, { hash: txHash })
                                 setUserDetails({
                                     id: "",
                                     username: userInput,

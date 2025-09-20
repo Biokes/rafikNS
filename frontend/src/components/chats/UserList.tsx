@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import type { UserListProps } from "@/types";
-import { Badge } from "lucide-react";
 import { useProtocol } from "@/contexts/useProtocol";
 
 
@@ -13,8 +12,7 @@ export default function UserList({
   className,
 }: UserListProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const {data:protocol} = useProtocol()
-  
+  const {data} = useProtocol()
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
@@ -27,7 +25,7 @@ export default function UserList({
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {protocol!.users.map((user) => (
+        {data.users.map((user) => (
           <div
             key={user.username}
             onClick={() => onUserSelect(user)}
@@ -38,7 +36,7 @@ export default function UserList({
           >
             <div className="relative">
               <Avatar className="h-12 w-12 border-[2px] shadow-white">
-                <AvatarImage src={user.imageURL} alt={user.userAddress} />
+                <AvatarImage src={user.imageURL} alt={user.userAddress}/>
               </Avatar>
             </div>
             <div className="flex-1 min-w-0">
@@ -47,22 +45,22 @@ export default function UserList({
                   {user.username}
                 </h3>
               </div>
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 {user.sentMessages.length > 0 ? (
                   <p className="text-sm text-chat-text-muted truncate">
-                    {user.sentMessages.splice(-1)}
+                    {user.sentMessages[user.sentMessages.length - 1]}
                   </p>
                 ):(
                   <p className="text-sm text-chat-text-muted truncate italic">
                     no messages sent yet
                   </p>
                 ) }
-                {user.sentMessages.length>0 &&
+                {user.sentMessages.length > 0 &&
                   <Badge className="bg-primary text-primary-foreground text-xs h-5 min-w-5 rounded-full px-1.5">
-                    100
+                    0
                   </Badge>
                 }
-              </div>
+              </div> */}
             </div>
           </div>
         ))}

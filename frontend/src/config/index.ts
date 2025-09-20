@@ -311,3 +311,25 @@ query{
   } 
 }
 `
+export const MESSAGES_QUERY = gql`
+query Messages($sender: String!, $reciever: String!) {
+    messagings(
+      where: {
+        or: [
+          { sender: $sender, reciever: $reciever }
+          { sender: $sender, reciever: $reciever }
+        ]
+      }
+      orderBy: transaction__blockTimestamp
+      orderDirection: asc
+    ) {
+      id
+      messageContent
+      sender
+      reciever
+      transaction {
+        blockTimestamp
+      }
+    }
+  }
+`

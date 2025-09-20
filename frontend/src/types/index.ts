@@ -7,28 +7,28 @@ export type BaseUser = {
 export type UserProfiles = {
   createdNames: BaseUser[];
 };
-export type UserContextType ={
+export type UserContextType = {
   user: BaseUser | null;
   setUserDetails: React.Dispatch<React.SetStateAction<null | BaseUser>>;
-}
-export interface User extends BaseUser{
+};
+export interface User extends BaseUser {
   recievedMessages: [];
   sentMessages: [];
 }
-export interface Message { 
+export interface Message {
   id: string;
   messageContent: string;
   reciever: string;
   sender: string;
   transaction: {
-    blockTimestamp:number
-  }
+    blockTimestamp: string;
+  };
 }
-export interface RafikNS { 
+export interface RafikNS {
   btcToUsdtPrice: number;
   ethToUsdtPrice: number;
   users: User[];
-  messages:Message[]
+  messages: Message[];
 }
 
 export interface UserListProps {
@@ -36,7 +36,13 @@ export interface UserListProps {
   onUserSelect: (userId: User) => void;
   className?: string;
 }
-export interface Protocol { 
-    data: RafikNS;
-    setProtocolData: (rafikNs:RafikNS) => void;
+export interface Protocol {
+  data: RafikNS;
+  setProtocolData: (rafikNs: RafikNS) => void;
+  fetchProtocolUsers: () => void;
+}
+export interface ChatWindowProps {
+  user?: User;
+  className?: string;
+  handleBackToList?: () => void;
 }

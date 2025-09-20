@@ -1,54 +1,105 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Send, Smile, Paperclip, Phone, Video, MoreVertical, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import type { User } from "@/types";
-
-interface Message {
-  id: string;
-  text: string;
-  timestamp: string;
-  isOwn: boolean;
-}
-
-interface ChatWindowProps {
-  user?: User;
-  className?: string;
-  handleBackToList?: () => void;
-}
+import type { Message, ChatWindowProps } from "@/types";
+import { useUser } from "@/contexts/useUser";
+import { CONTRACT_ABI, CONTRACT_ADDRESS, GRAPH_BASE_URL, MESSAGES_QUERY, publicClient } from "@/config";
+import type { Hex } from "viem";
+import { toast } from "sonner";
+import { useSimulateContract, useWriteContract } from "wagmi";
+import request from "graphql-request";
 
 export default function ChatWindow({ user, className, handleBackToList }: ChatWindowProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [isFetching, setFetching] = useState<boolean>(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { user: currentUser } = useUser();
+  const { writeContractAsync } = useWriteContract();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  useEffect(() => {
-    if (user?.userAddress) {
-      setMessages([]);
+  const fetchMessages = useCallback(async () => {
+    setFetching(true);
+    try {
+      const data = await request<{messagings: Message[]}>(
+        GRAPH_BASE_URL,
+        MESSAGES_QUERY,
+        {
+          sender: currentUser?.username,
+          reciever: user?.username,
+        }
+      );
+      setMessages(data.messagings || []);
+      scrollToBottom();
+    } catch (err) {
+      console.error("Failed to fetch messages:", err);
+    } finally {
+      setFetching(false);
     }
-  }, [user]);
+  }, [currentUser?.username, user?.username]);
 
-  const handleSendMessage = () => {
+  const { data: simulation, error: simulationError } = useSimulateContract({
+    address: CONTRACT_ADDRESS as Hex,
+    abi: CONTRACT_ABI,
+    functionName: "message",
+    args: [currentUser?.username, user?.username, message],
+  });
+
+  useEffect(() => {
+    if (user?.username && currentUser?.username) {
+      fetchMessages();
+    }
+  }, [fetchMessages, user?.username, currentUser?.username]);
+
+  const sendMessageSimulation = useCallback(async () => {
+    if (simulation) {
+      try {
+        setLoading(true);
+        const txHash = await writeContractAsync(simulation.request);
+        const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+
+        if (receipt.status === "reverted") {
+          toast.error("Message not sent");
+        } else {
+          toast.success("Message sent successfully");
+
+          const optimisticMessage: Message = {
+            id: txHash,
+            messageContent: message,
+            sender: currentUser!.userAddress,
+            reciever: user!.userAddress,
+            transaction: { blockTimestamp: String(Math.floor(Date.now() / 1000)) },
+          };
+          setMessages((prev) => [...prev, optimisticMessage]);
+          scrollToBottom();
+
+          await fetchMessages();
+        }
+      } catch (err) {
+        toast.error("Transaction failed");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (simulationError) {
+      toast.error(simulationError.message);
+    }
+  }, [simulation, simulationError, writeContractAsync, message, currentUser, user, fetchMessages]);
+
+  const handleSendMessage = async () => {
     if (!message.trim()) return;
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      text: message,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      isOwn: true,
-    };
-    setMessages([...messages, newMessage]);
+    try {
+      await sendMessageSimulation();
+    } catch (error) {
+      console.error("Texting error: ", error);
+    }
     setMessage("");
   };
 
@@ -77,6 +128,17 @@ export default function ChatWindow({ user, className, handleBackToList }: ChatWi
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
+      {(isLoading || isFetching) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg">
+            <p className="text-lg font-semibold">Loading...</p>
+            <p className="text-sm text-gray-500 mt-2">
+              {isLoading ? "Waiting for confirmation" : "Fetching messages..."}
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between px-4 py-2 border-b border-chat-border">
         <div className="flex items-center gap-3">
           <div className="flex gap-2">
@@ -96,7 +158,9 @@ export default function ChatWindow({ user, className, handleBackToList }: ChatWi
           </div>
           <div>
             <h3 className="font-semibold text-chat-text">{user.username}</h3>
-            <p className="text-sm text-chat-text-muted">Online</p>
+            <p className="text-[0.65rem] md:text-sm text-chat-text-muted">
+              {user.username === currentUser?.username ? "Message Yourself" : "Message now"}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -113,16 +177,31 @@ export default function ChatWindow({ user, className, handleBackToList }: ChatWi
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => (
-          <div key={msg.id} className={cn("flex", msg.isOwn ? "justify-end" : "justify-start")}>
-            <div className={cn("max-w-[70%] px-4 py-2 rounded-2xl text-sm", msg.isOwn ? "bg-chat-message text-white rounded-br-md" : "bg-chat-message-received text-chat-text rounded-bl-md")}>
-              <p className="mb-1">{msg.text}</p>
-              <span className={cn("block text-xs", msg.isOwn ? "text-green-100" : "text-chat-text-muted")}>
-                {msg.timestamp}
-              </span>
+        {messages.map((msg) => {
+          const isMine = msg.sender.toLowerCase() === currentUser?.userAddress.toLowerCase();
+          return (
+            <div key={msg.id} className={cn("flex", isMine ? "justify-end" : "justify-start")}>
+              <div
+                className={cn(
+                  "p-1 max-w-[70%] px-4 py-2 rounded-2xl text-sm",
+                  isMine
+                    ? "bg-chat-message text-white rounded-br-md text-right"
+                    : "bg-chat-message-received text-chat-text rounded-bl-md text-left"
+                )}
+              >
+                <p>{msg.messageContent}</p>
+                <span
+                  className={cn(
+                    "block text-xs mt-1",
+                    isMine ? "text-green-100" : "text-chat-text-muted"
+                  )}
+                >
+                  {new Date(Number(msg.transaction.blockTimestamp) * 1000).toLocaleTimeString()}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
 
@@ -150,7 +229,7 @@ export default function ChatWindow({ user, className, handleBackToList }: ChatWi
           </div>
           <Button
             onClick={handleSendMessage}
-            disabled={!message.trim()}
+            disabled={!message.trim() || isLoading}
             className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full p-3"
           >
             <Send className="h-5 w-5" />
