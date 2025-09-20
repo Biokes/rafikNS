@@ -24,7 +24,6 @@ export default function ProtocolProvider({ children }: { children: React.ReactNo
       console.error("Fetching error: ", error)
     }
   }, [])
-
     useEffect(() => {
       fetchProtocolUsers()
     }, [fetchProtocolUsers])

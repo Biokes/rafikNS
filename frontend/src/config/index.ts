@@ -1,16 +1,16 @@
 import {sepolia} from 'wagmi/chains';
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import type { Abi } from 'viem';
+// import type { Abi } from 'viem';
 import { createPublicClient, http } from 'viem'
 import { gql } from 'graphql-request';
+import { ethers } from "ethers";
 
 export const config = getDefaultConfig({
-    appName: 'My RainbowKit App',
+    appName: 'RafikNS',
     projectId: 'YOUR_PROJECT_ID',
     chains: [sepolia],
     ssr: false,
 })
-
 export const CONTRACT_ABI =[
     {
       "inputs": [],
@@ -277,7 +277,7 @@ export const CONTRACT_ABI =[
       "stateMutability": "view",
       "type": "function"
     }
-  ] as Abi;
+  ] as const;
 export const CONTRACT_ADDRESS: string = "0x45584566FcFad6778439E908Fb3Ec308AB49eCd5"
 export const publicClient = createPublicClient({
   chain: sepolia,
@@ -333,3 +333,6 @@ query Messages($sender: String!, $reciever: String!) {
     }
   }
 `
+export const jsonRpcProvider = new ethers.JsonRpcProvider("https://eth-sepolia.g.alchemy.com/v2/e8DuJbLjr5-TIkTn4GQ-RNKmrPkbD0TN")
+export const CONTRACT = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, jsonRpcProvider)
+
