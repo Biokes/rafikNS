@@ -8,12 +8,14 @@ import { useUser } from "@/contexts/useUser";
 
 export default function Home() {
     const { address } = useAccount()
-    const { data } = useProtocol()
     const navigate = useNavigate()
     const { setUserDetails } = useUser()
+    const { data, fetchProtocolUsers } = useProtocol()
+    
     useEffect(() => {
-        if (!address || !data?.users) return;
-        const matchedUser = data!.users.find(
+        fetchProtocolUsers()
+        if (!address) return;
+        const matchedUser = data.users.find(
             (user) => user.userAddress.toLowerCase() === address.toLowerCase()
         );
         if (matchedUser) {
@@ -23,7 +25,7 @@ export default function Home() {
             });
             navigate("/chats", { replace: true });
         }
-    }, [address, data, navigate, setUserDetails]);
+    }, [address, data.users, fetchProtocolUsers, navigate, setUserDetails]);
 
     return (
         <div className="flex flex-col overflow-hidden h-screen">

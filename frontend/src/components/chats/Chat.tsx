@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserList from "./UserList";
 import ChatWindow from "./ChatWindow";
 import { useAccount } from "wagmi"
 import type { User } from "@/types";
+import { useProtocol } from "@/contexts/useProtocol";
 
 
 export default function Chat() {
+  const { fetchProtocolUsers} = useProtocol()
+  useEffect(() => { 
+    fetchProtocolUsers()
+  }, [fetchProtocolUsers])
+  
   const [selectedUserId, setSelectedUserId] = useState<User>({
     id:"",
     imageURL: "",
@@ -16,6 +22,7 @@ export default function Chat() {
   });
   const [showChat, setShowChat] = useState(false);
   const { address } = useAccount()
+
   const handleUserSelect = (user: User) => {
     if (!address) return;
     setSelectedUserId(user);

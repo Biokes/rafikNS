@@ -2,10 +2,7 @@ import type { RafikNS } from "@/types"
 import { useState, useCallback, useEffect } from "react"
 import { ProtocolContext } from "./useProtocol"
 import { request} from "graphql-request"
-import { useAccount } from "wagmi"
 import { GRAPH_BASE_URL, PROTOCOL_QUERY } from "@/config"
-import { ContractFunctionExecutionError } from "viem"
-import { toast } from "sonner"
 
 export default function ProtocolProvider({ children }: { children: React.ReactNode }) {
 
@@ -15,28 +12,24 @@ export default function ProtocolProvider({ children }: { children: React.ReactNo
     users: [],
     messages:[]
      })
-    const { address } = useAccount()
     const setProtocolData = (protocol: RafikNS)=>{ 
         setProtocol(protocol)
     }
    
   const fetchProtocolUsers = useCallback(async () => {
     try {
-      const response: RafikNS = await request(GRAPH_BASE_URL, PROTOCOL_QUERY)
-      setProtocol(response)
+      const response = await request<{protocol: RafikNS}>(GRAPH_BASE_URL, PROTOCOL_QUERY)
+      setProtocol(response.protocol)
     } catch (error) {
-      if (error instanceof ContractFunctionExecutionError) { 
-        toast.error(error.details)
-      }
       console.error("Fetching error: ", error)
     }
   }, [])
 
     useEffect(() => {
-        if (address) fetchProtocolUsers()
-  }, [address, fetchProtocolUsers])
+      fetchProtocolUsers()
+    }, [fetchProtocolUsers])
     return (
-        <ProtocolContext.Provider  value={{ data: protocol,setProtocolData }}>
+        <ProtocolContext.Provider  value={{ data: protocol,setProtocolData, fetchProtocolUsers }}>
             {children}
         </ProtocolContext.Provider >
     )

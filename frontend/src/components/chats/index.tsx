@@ -8,11 +8,12 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { useUser } from "@/contexts/useUser";
+import { useProtocol } from "@/contexts/useProtocol";
 
 export default function ChatPage() {
     const { openConnectModal } = useConnectModal();
     const { user } = useUser();
-
+    const protocol = useProtocol()
 
     function DisConnectButton() {
         return (
@@ -36,6 +37,16 @@ export default function ChatPage() {
                             <div>
                                 <p className="font-medium">{user ? `${user.username}.rafik` : 'Anonymous'}</p>
                             </div>
+                        </div>
+                        <div className="flex flex-col gap-2 p-1">
+                            <article className="flex justify-between w-full items-center p-2 border-[1px] border-primary rounded">
+                                <p> ETH to USD today: </p>
+                                <p>${((protocol.data.ethToUsdtPrice).toString().substring(0,4)) }</p>
+                            </article>
+                            <article className="flex justify-between w-full items-center p-2 border-[1px] border-primary rounded">
+                                <p> BTC to USD today: </p>
+                                <p>${(protocol.data.btcToUsdtPrice.toString().substring(0,6)) }</p>
+                            </article> 
                         </div>
                         <Button className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
                             variant="ghost" onClick={() => openConnectModal?.()}>
