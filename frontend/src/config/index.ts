@@ -60,7 +60,7 @@ export const CONTRACT_ABI =[
       "name": "CreatedName",
       "type": "event"
     },
-    {
+    { 
       "anonymous": false,
       "inputs": [
         {
