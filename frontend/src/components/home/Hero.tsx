@@ -70,7 +70,7 @@ export default function HeroSection() {
             setOpenDialog(true)
     }
 
-    const handleUploadFile = async (selectedFile: File) => {
+    const handleUploadFile = async (selectedFile: File): Promise<string> => {
         try {
             if (!selectedFile) {
                 toast.error("No file selected")
@@ -86,10 +86,11 @@ export default function HeroSection() {
                 body: formData,
             });
             const response = await request.json();
-            setPreview(`https://ipfs.io/ipfs/${response.data.cid}`)
+            return `https://ipfs.io/ipfs/${response.data.cid}`
         } catch (error) {
             toast.error("unable to upload image")
             console.log("error: ", error)
+            return ""
         }
     }
 
@@ -213,22 +214,23 @@ export default function HeroSection() {
                         disabled={!selectedFile || isLoading}
                         onClick={async () => {
                             setLoading(true)
+                            let cid = ""
                             try {
                                 if (selectedFile) {
-                                    await handleUploadFile(selectedFile)
+                                   cid = await handleUploadFile(selectedFile)
                                 }
                                 const txHash = await writeContractAsync({
                                     address: CONTRACT_ADDRESS as Hex,
                                     abi: CONTRACT_ABI,
                                     functionName: "createName",
-                                    args: [userInput.toLowerCase(), preview as string],
+                                    args: [userInput.toLowerCase(), cid],
                                 })
                                 await waitForTransactionReceipt(publicClient, { hash: txHash })
                                 setUserDetails({
                                     id: "",
                                     username: userInput,
                                     userAddress: address!,
-                                    imageURL: preview as string,
+                                    imageURL: cid,
                                 })
                                 toast.success("Name registered successfully!")
                                 setOpenDialog(false)

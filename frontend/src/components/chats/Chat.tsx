@@ -57,7 +57,7 @@ export default function Chat() {
             </div>
           )}
         </div>
-        <div className="hidden md:flex h-full">
+        <div className="hidden md:flex h-full gap-[3px]">
           <div className="w-1/3 max-w-sm bg-card/50 backdrop-blur-xl border-r border-border">
             <UserList selectedUser={selectedUserId} onUserSelect={handleUserSelect} />
           </div>

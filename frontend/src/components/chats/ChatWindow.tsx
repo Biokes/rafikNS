@@ -48,7 +48,7 @@ export default function ChatWindow({ user, className, handleBackToList }: ChatWi
     address: CONTRACT_ADDRESS as Hex,
     abi: CONTRACT_ABI,
     functionName: "message",
-    args: [currentUser?.username, user?.username, message],
+    args: [currentUser?.username as string, user?.username as string, message],
   });
 
   useEffect(() => {
@@ -138,7 +138,6 @@ export default function ChatWindow({ user, className, handleBackToList }: ChatWi
           </div>
         </div>
       )}
-
       <div className="flex items-center justify-between px-4 py-2 border-b border-chat-border">
         <div className="flex items-center gap-3">
           <div className="flex gap-2">
@@ -157,7 +156,7 @@ export default function ChatWindow({ user, className, handleBackToList }: ChatWi
             </Avatar>
           </div>
           <div>
-            <h3 className="font-semibold text-chat-text">{user.username}</h3>
+            <h3 className="font-semibold text-sm text-chat-text capitalize">{user.username}</h3>
             <p className="text-[0.65rem] md:text-sm text-chat-text-muted">
               {user.username === currentUser?.username ? "Message Yourself" : "Message now"}
             </p>
@@ -178,13 +177,13 @@ export default function ChatWindow({ user, className, handleBackToList }: ChatWi
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg) => {
-          const isMine = msg.sender.toLowerCase() === currentUser?.userAddress.toLowerCase();
+          const isNotMine = msg.sender.toLowerCase() === currentUser?.userAddress.toLowerCase();
           return (
-            <div key={msg.id} className={cn("flex", isMine ? "justify-end" : "justify-start")}>
+            <div key={msg.id} className={cn("flex min-w-auto max-w-[70%] border  rounded-b-[10px]", isNotMine ? "justify-end " : "rounded-tl-[10px] justify-start")}>
               <div
                 className={cn(
                   "p-1 max-w-[70%] px-4 py-2 rounded-2xl text-sm",
-                  isMine
+                  isNotMine
                     ? "bg-chat-message text-white rounded-br-md text-right"
                     : "bg-chat-message-received text-chat-text rounded-bl-md text-left"
                 )}
@@ -192,11 +191,11 @@ export default function ChatWindow({ user, className, handleBackToList }: ChatWi
                 <p>{msg.messageContent}</p>
                 <span
                   className={cn(
-                    "block text-xs mt-1",
-                    isMine ? "text-green-100" : "text-chat-text-muted"
+                    "block text-[0.65rem] mt-1",
+                    isNotMine ? "text-green-100" : "text-chat-text-muted"
                   )}
                 >
-                  {new Date(Number(msg.transaction.blockTimestamp) * 1000).toLocaleTimeString()}
+                  {new Date(Number(msg.transaction.blockTimestamp) * 1000).toLocaleString()}
                 </span>
               </div>
             </div>
