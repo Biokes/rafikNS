@@ -10,10 +10,9 @@ export default function Home() {
     const { address } = useAccount()
     const navigate = useNavigate()
     const { setUserDetails } = useUser()
-    const { data, fetchProtocolUsers } = useProtocol()
+    const { data } = useProtocol()
     
     useEffect(() => {
-        fetchProtocolUsers()
         if (!address) return;
         const matchedUser = data.users.find(
             (user) => user.userAddress.toLowerCase() === address.toLowerCase()
@@ -25,7 +24,7 @@ export default function Home() {
             });
             navigate("/chats", { replace: true });
         }
-    }, [address, data.users, fetchProtocolUsers, navigate, setUserDetails]);
+    }, [address, data.users]);
 
     return (
         <div className="flex flex-col overflow-hidden h-screen">

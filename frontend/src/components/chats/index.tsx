@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { useUser } from "@/contexts/useUser";
 import { useProtocol } from "@/contexts/useProtocol";
+import { useDisconnect } from "wagmi";
 
 export default function ChatPage() {
     const { openConnectModal } = useConnectModal();
@@ -16,6 +17,7 @@ export default function ChatPage() {
     const protocol = useProtocol()
 
     function DisConnectButton() {
+        const { disconnect } = useDisconnect()
         return (
             <Popover>
                 <PopoverTrigger asChild>
@@ -23,19 +25,19 @@ export default function ChatPage() {
                         <div className="w-[30px] h-[30px] rounded-[20px] border-[1px] overflow-hidden">
                             <img src={user?.imageURL} alt="userProfilePix" className="object-cover w-full h-full object-center" />
                         </div>
-                        <p className="hidden md:block">
+                        <p className="capitalize">
                             {user ? `${user?.username}.rafik` : 'Anonymous'}
                         </p>
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-80" align="end">
+                <PopoverContent className="w-80" align="start">
                     <div className="space-y-4">
                         <div className="flex items-center gap-3 p-2 border-b">
                             <div className="w-10 h-10 rounded-full border overflow-hidden">
                                 <img src={user?.imageURL} alt="Profile" className="w-full h-full object-cover" />
                             </div>
                             <div>
-                                <p className="font-medium">{user ? `${user.username}.rafik` : 'Anonymous'}</p>
+                                <p className="font-medium capitalize">{user ? `${user.username}.rafik` : 'Anonymous'}</p>
                             </div>
                         </div>
                         <div className="flex flex-col gap-2 p-1">
@@ -48,9 +50,9 @@ export default function ChatPage() {
                                 <p>${(protocol.data.btcToUsdtPrice.toString().substring(0,6)) }</p>
                             </article> 
                         </div>
-                        <Button className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
-                            variant="ghost" onClick={() => openConnectModal?.()}>
-                            <LogOut className="h-4 w-4 mr-2" />
+                        <Button className="w-full justify-start text-destructive cursor-pointer hover:text-destructive hover:bg-destructive/10"
+                            variant="ghost"   onClick={() => disconnect()}>
+                            <LogOut className="h-4 w-4 mr-2"/>
                             Disconnect
                         </Button>
                     </div>

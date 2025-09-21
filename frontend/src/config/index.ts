@@ -1,16 +1,15 @@
 import {sepolia} from 'wagmi/chains';
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import type { Abi } from 'viem';
 import { createPublicClient, http } from 'viem'
 import { gql } from 'graphql-request';
+import { ethers } from "ethers";
 
 export const config = getDefaultConfig({
-    appName: 'My RainbowKit App',
+    appName: 'RafikNS',
     projectId: 'YOUR_PROJECT_ID',
     chains: [sepolia],
     ssr: false,
 })
-
 export const CONTRACT_ABI =[
     {
       "inputs": [],
@@ -61,7 +60,7 @@ export const CONTRACT_ABI =[
       "name": "CreatedName",
       "type": "event"
     },
-    {
+    { 
       "anonymous": false,
       "inputs": [
         {
@@ -277,13 +276,12 @@ export const CONTRACT_ABI =[
       "stateMutability": "view",
       "type": "function"
     }
-  ] as Abi;
+  ] as const;
 export const CONTRACT_ADDRESS: string = "0x45584566FcFad6778439E908Fb3Ec308AB49eCd5"
 export const publicClient = createPublicClient({
   chain: sepolia,
   transport: http()
 })
-
 export const GRAPH_BASE_URL = "https://api.studio.thegraph.com/query/120726/rafik-ns/0.0.5";
 export const API_Key = "7d304383fec279b52a8a"
 export const API_SECRET =  "1d02a459f75b764c7716cd54e9ea2e5bc5f6fe80e24f7399b65047b0ee095d86"
@@ -317,7 +315,7 @@ query Messages($sender: String!, $reciever: String!) {
       where: {
         or: [
           { sender: $sender, reciever: $reciever }
-          { sender: $sender, reciever: $reciever }
+          { reciever: $sender, sender: $reciever }
         ]
       }
       orderBy: transaction__blockTimestamp
@@ -333,3 +331,5 @@ query Messages($sender: String!, $reciever: String!) {
     }
   }
 `
+export const jsonRpcProvider = new ethers.JsonRpcProvider("https://eth-sepolia.g.alchemy.com/v2/e8DuJbLjr5-TIkTn4GQ-RNKmrPkbD0TN")
+export const CONTRACT = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, jsonRpcProvider)

@@ -38,7 +38,7 @@ export interface UserListProps {
 }
 export interface Protocol {
   data: RafikNS;
-  setProtocolData: (rafikNs: RafikNS) => void;
+  setProtocolData: (rafikNs: RafikNS ) => void;
   fetchProtocolUsers: () => void;
 }
 export interface ChatWindowProps {

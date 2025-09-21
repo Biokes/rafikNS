@@ -24,13 +24,13 @@ export default function UserList({
           />
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto gap-[2px] flex flex-col">
         {data.users.map((user) => (
           <div
             key={user.username}
             onClick={() => onUserSelect(user)}
             className={cn(
-              "flex items-center gap-3 p-4 cursor-pointer transition-colors hover:bg-chat-hover hover:bg-gray-700",
+              "flex items-center gap-3 p-4 cursor-pointer transition-colors hover:bg-chat-hover hover:bg-gray-700 rounded capitalize ",
               selectedUser.username === user.username && "bg-chat-active border-r-2 border-primary border-y-[1px] border-gray-700"
             )}
           >
